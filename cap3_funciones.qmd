@@ -1,0 +1,504 @@
+# Condicionales, ciclos y funciones {style="color: #122562"}
+
+## Condicionales {style="color: #122562"}
+
+Los condicionales se utilizan para tomar decisiones basadas en ciertas condiciones de interés. Lo característico de estos es que se pueden usar múltiples veces y muchas veces se hace para evitar que se ejecuten comandos si no se cumplen las condiciones necesarias. Los condicionales más comunes son `if()` y `else()`.
+
+El `if()` se utiliza para ejecutar un bloque de código si una condición es verdadera, mientras que `else()` ocurre cuando ninguna de las condiciones anteriores es verdadera.
+
+`if(Condicion){Codigo}`
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+#| output: true
+#| echo: true
+
+if(4 > 3) print("Verdadero") # Imprime "verdadero" si la condicion se cumple
+
+if(4 < 3) print("Verdadero") #  No Imprime "verdadero" debido a que la condicion no se cumple
+  
+```
+:::
+
+Las condiciones deben de ser expresiones que produzcan un valor logico (`TRUE` o `FALSE`). Si es `TRUE`, se ejecutara el codigo entre llaves (`{}`). Si no se cumple la condicion, se omite el codigo entre llaves y R no realiza ninguna operación.
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+#| output: true
+#| echo: true
+
+if(3 > 2) {
+  print("Imprime")
+}
+
+```
+:::
+
+**Sintáxis básica** `if()` + `else()`
+
+La combinación de `if()` + `else()` sirve para establecer tanto los comandos que deben ejecutarse al darse una condición determinada, como aquellos que deben ejecutarse al *no* darse dicha condición.
+
+``` if (condición``comando1``) else comando2 ```
+
+Cuando se cumpla la condición dada se ejecutará el comando1 de lo contrario se ejecuta el comando2. En este caso también se pueden usar las llaves, pero si no se usan, todo debe ir en **una única línea**. Generalmente es más comprensible si se usa la estructura de llaves por lo que se recomienda implementar este método.
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+#| output: false
+#| echo: true
+
+x <- if(3 > 4){
+  print("Verdadero") 
+  } else {
+  print("False")
+  }
+
+```
+
+```{r}
+x
+```
+:::
+
+Otra función implementada es `ifelse()` la cual evalua una condición en múltiples elementos de un vector. En donde se cumpla la condición esta asigna un valor determinado, mientras que donde no se cumpla asigna un valor alternativo.
+
+`ifelse(condicion, valor1, valor2)`
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+#| output: true
+#| echo: true
+
+
+x1 <- -10:10
+
+x2 <- ifelse(x1 > 0, x1 + 10, x1 - 5)
+x2 <- paste(x1, x2)
+
+
+```
+
+```{r}
+x2
+```
+:::
+
+## Ciclos {style="color: #122562"}
+
+Los **Loops** son comandos especiales que son útiles cuando se desea realizar la misma acción en varios puntos de datos u objetos, o cuando se desea repetir una acción hasta que se cumpla una determinada condición. Las funciones más universalmente implementadas para la implementación de Loops son `for()` y `while()`
+
+### For
+
+El ciclo for en R se utiliza para iterar sobre una secuencia de valores y ejecutar un bloque de código para cada valor en esa secuencia.
+
+`for(loopindex in loopvector){ Comando }`
+
+En este el loopindex hace referencia a un marcador de posicion que representa un elemento en el loopvector. Este inicia en el primer elemento del vector y se mueve a travéz de este con cada repetición del loop.
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+#| output: true
+#| echo: true
+
+for (x in 5:7) {
+  cat("--Inicia el proceso--\n")
+  cat("El actual numero es", x, "\n")
+  cat("--Finaliza el proceso--\n\n")
+}
+
+```
+:::
+
+Este procedimiento también puede ser usado para manipular objetos o vectores que existen por fuera del loop.
+
+::: {.callout-note collapse="true"}
+# Ejemplo
+
+```{r}
+#| output: true
+#| echo: true
+
+x <- c(0.4, 1.1, 0.34, 0.55)
+
+for (i in x ) {
+  cat("El numero a multiplicar es", i, "\n" )
+  print(2*i)
+}
+
+for (i in 1:length(x)) {
+  cat("El numero a multiplicar es", x[i], "\n" )
+  print(2*x[i])
+}
+
+```
+:::
+
+De igual forma se pueden realizar operaciones con matrices, listas o data frames según la necesidad de la investigacion.
+
+```{r}
+#| output: false
+#| echo: true
+
+x1 <- matrix(rpois(12, 8), 4, 3)
+x2 <- rep(0, 4)
+
+```
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+#| output: true
+#| echo: true
+
+for (i in 1:4) {
+  cat("Los numeros a sumar son", x1[i,], "\n" )
+  x2[i] <- sum(x1[i,])
+}
+
+x2
+```
+:::
+
+### While {style="color: #122562"}
+
+El bucle while en R se utiliza para ejecutar un bloque de código repetidamente mientras una condición específica sea verdadera.
+
+`while(condicion){ Comando o operación }`
+
+::: {.callout-note collapse="true"}
+# Ejemplo
+
+```{r}
+
+
+# Inicializamos una variable
+x <- 1
+
+# Definimos la condición
+while (x <= 7) {
+  # Incrementamos la variable de control
+  x <- x + 1
+  cat("\n'x' es ahora", x, "\n")
+  cat("'mi condicion ahora es", x<=7, "\n")
+}
+
+```
+:::
+
+## Funciones {style="color: #122562"}
+
+Una función es una serie de operaciones a las que se le asignan un nombre. Las funciones aceptan argumentos, es decir, especificaciones sobre como deben funcionar.
+
+R cuenta con una gran cantidad de funciones incorporadas para realizar operaciones comúnes. Para invocarlas se utiliza la notación: `nombre_de_la_funcion()`.
+
+Algunas funciones basicas son `print()`, `sum()`, `length()`, `mean()`, `sd()`, `summary()`, `max()`, `min()`, entre otras.
+
+Sin embargo las funciones base de R no siempre cubren todas nuestras necesidades. Para escribir una función en R, primero se necesita saber cómo es la sintaxis del comando function. En este caso se utilizará la función `function()` que toma como argumento los argumentos de la función. La función devolverá el resultado deseado. Por defecto, el resultado devuelto es el último utilizado, pero es mejor usar la función `return()`.
+
+`functionname <- function(arg1, arg2, arg3, ...){ Realiza cualquier codigo aqui return(regresa el objeto creado) }`
+
+Usando este comando la función es definida más no ejecutada. La función creada, evaluará los argumentos provistos dentro de esta y regresará su salida.
+
+::: {.callout-note collapse="true"}
+## Creación de función
+
+```{r}
+
+test <- function(){
+  print("Hola mundo")
+}
+
+test()
+```
+
+En este caso la primera función no tiene argumentos (lo cual no es de mucha utilidad), por lo cuál se considera como una funcion de una sola salida posible.
+:::
+
+Las intrucciones de las funciones son comandos de R que se van a ejecutar cada vez que el usuario llame esta función.
+
+::: {.callout-note collapse="true"}
+## Creación de función
+
+```{r}
+edad <- function(x){
+  texto <- paste("Vengo de Palmira, tengo", x, "años ")
+  cat(texto)
+}
+
+edad(220)
+edad("setenta y tantos")
+```
+:::
+
+Podemos tambien convertir operaciones aritméticas y volverlas funciones, mediante la asignación a una fórmula llamada suma o area_rectangulo.
+
+::: {.callout-note collapse="true"}
+## Creación de función
+
+```{r}
+suma =
+  function(x, y) {
+  return(x + y)
+}
+
+suma(x=4, y=6)  # Probando la función
+```
+:::
+
+::: {.callout-note collapse="true"}
+## Creación de función
+
+```{r}
+# Función para calcular el área de un rectángulo
+area_rectangulo = function(base, altura) {
+  # El cuerpo de la función
+  area = base * altura
+  
+  # Devolver el valor del área
+  return(area)
+}
+
+X= 10
+Y= 3453
+area_rectangulo(X,Y)
+
+```
+:::
+
+### Cuando crear una función {style="color: #122562"}
+
+Se debería plantear, crear o escribir una función siempre que se haya copiado y pegado un bloque de código más de dos veces.
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+
+
+df <- data.frame(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+
+df$a <- (df$a - min(df$a, na.rm = TRUE)) / 
+  (max(df$a, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$b <- (df$b - min(df$b, na.rm = TRUE)) / 
+  (max(df$b, na.rm = TRUE) - min(df$a, na.rm = TRUE))
+df$c <- (df$c - min(df$c, na.rm = TRUE)) / 
+  (max(df$c, na.rm = TRUE) - min(df$c, na.rm = TRUE))
+df$d <- (df$d - min(df$d, na.rm = TRUE)) / 
+  (max(df$d, na.rm = TRUE) - min(df$d, na.rm = TRUE))
+```
+
+```{r}
+df
+```
+
+Repetir un proceso múltiples veces puede, en ocasiones, generar errores, principalmente relacionados con la escritura de los comandos necesarios para obtener el resultado.
+:::
+
+::: {.callout-note collapse="true"}
+## Creando la función
+
+```{r}
+#| output: false
+#| echo: false
+
+df <- data.frame(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+```
+
+```{r}
+
+rescale <- function(x) {
+rng <- range(x, na.rm = TRUE)
+(x - rng[1]) / rng[2] - rng[1]
+}
+
+df$a <- rescale(df$a)
+df$b <- rescale(df$b)
+df$c <- rescale(df$c)
+df$d <- rescale(df$d)
+```
+
+```{r}
+df
+```
+:::
+
+## Familia `apply()` {style="color: #122562"}
+
+Las expresiones multilínea con llaves no son tan fáciles de ordenar cuando se trabaja en la línea de comandos. Por ende, R tiene algunas funciones que implementan bucles de forma compacta.
+
+Existen diferentes versiones de la función `apply()`, las cuales desarrollan operaciones de interés en un subconjunto de objetos. Este subconjunto de objetos normalmente está definido en términos de uno o más vectores.
+
+Mediante la implementación de estas funciones, se pueden automatizar distintas tareas que resultan complejas para las labores diarias. Estas funciones no solamente reciben datos como argumentos, sino que también pueden recibir funciones.
+
+Las funciones conformadas por esta familia son:
+
+| Función    | Descripción                                                                                                 |
+|------------|-------------------------------------------------------------------------------------------------------------|
+| `apply()`  | Aplica una función a las filas o columnas de una matriz o tabla                                             |
+| `lapply()` | Aplica una función a cada elemento de una lista y devuelve una lista del mismo tamaño.                      |
+| `mapply()` | Una versión multivariable de `sapply()`, aplica una función a múltiples argumentos de forma paralela.       |
+| `sapply()` | Similar a `lapply()`, pero intenta devolver un resultado más simple, como un vector o una tabla.            |
+| `tapply()` | Aplica una función a los subconjuntos de un vector definidos por factores.                                  |
+| `vapply()` | Similar a `sapply()`, pero permite especificar el tipo de valor de retorno, proporcionando mayor seguridad. |
+
+La sintaxis de la funcion es `apply(x, evento, funcion)`, en donde `x` hace referencia a la tabla o matríz sobre la cual se quiere aplicar la función, `evento` especifica si deseas aplicar este a travéz de las filas y las columnas y `funcion` es el proceso que deseas realizar.
+
+::: {.callout-note collapse="true"}
+## `apply()`
+
+```{r}
+x <- matrix(1:30, 10, 3)
+```
+
+```{r}
+apply(x, 1, sum)
+```
+
+Se observa que la función regresa el vector conteniendo la suma de cada una de las filas
+
+```{r}
+apply(x, 1, length)
+```
+
+Regresa la longitud de cada fila
+:::
+
+Si se quiere realizar este proceso por cada columna entonces se debe asignar el número 2.
+
+::: {.callout-note collapse="true"}
+## Ejemplo
+
+```{r}
+apply(x, 2, sum)
+```
+
+Se observa que la función regresa el vector conteniendo la suma de cada una de las columnas
+
+```{r}
+apply(x, 2, length)
+```
+
+Regresa la longitud de cada columna
+:::
+
+La funcion `lapply()` funciona de manera muy similar a esta, sin embargo cambia algunos argumentos.
+
+::: {.callout-note collapse="true"}
+## `lapply()`
+
+```{r}
+lapply(x, sum)
+```
+
+La función retorna cada uno de los vectores dentro de la matriz.
+
+```{r}
+x1 <- c(1:9)
+x2 <- c(1:12)
+x3 <- c(1:15)
+
+lista <- list(x1, x2, x3)
+```
+
+```{r}
+
+lapply(lista, sum)
+
+```
+
+Se observa que funciona mejor con listas, ya que retorna la suma de cada una de estas.
+:::
+
+`sapply()` funciona como `lapply()` pero simplifica la salida si es posible. Esto significa que en lugar de devolver una lista como `lapply()`, devuelve un vector si los datos son simplificables.
+
+::: {.callout-note collapse="true"}
+## `sapply()`
+
+```{r}
+sapply(lista, sum)
+```
+:::
+
+`vapply()` es similar a `sapply()`, pero requiere que se especifique qué tipo de datos contiene. Los argumentos para `vapply()` son `vapply(data, funcion, funcion.valor)`. En `funcion.valor` es donde se especifica que tipo de datos esperas obtener.
+
+::: {.callout-note collapse="true"}
+## `vapply()`
+
+```{r}
+
+vapply(lista, sum, numeric(1))
+
+```
+:::
+
+A veces puede que al realizar la función, se quiera aplicar en algunos datos, pero se deben tener separados por factor. En ese caso, debe utilizar `tapply()`
+
+::: {.callout-note collapse="true"}
+## `tapply()`
+
+```{r}
+x5 <- as.data.frame(cbind(c(1,1,1,1,1,2,2,2,2,2), x))
+```
+
+```{r}
+tapply(x5$V2, x5$V1, mean)
+```
+:::
+
+La última función de esta familia es `mapply()`. Primero se enumera la función, seguida de los vectores que se están usando, el resto de los argumentos tienen valores por defecto, así que no necesitan ser cambiados por ahora.
+
+Cuando se tiene una función que toma 2 argumentos, el primer vector va en el primer argumento y el segundo vector va en el segundo argumento.
+
+::: {.callout-note collapse="true"}
+## `mapply()`
+
+```{r}
+mapply(rep, 1:9, 9:1)
+```
+:::
+
+## Ejercicio de recopilación {style="color: #122562"}
+
+1.  Crea un vector llamado `edades` con los siguientes valores: 12, 20, 32, 40, 55.\
+    Luego:
+
+    -   Obtén el primer y último elemento.
+
+    -   Calcula la media del vector.
+
+    -   Filtra las edades mayores a 30.
+
+2.  Dado un vector de temperaturas:
+
+    `temp <- c(15, 28, 31, 22, 35, 18)`
+
+Usa `ifelse()` para clasificar cada valor como:
+
+-   "frío" (\< 20)
+
+-   "templado" (20-30)
+
+-   "caliente" (\> 30)
+
+3.  Escribe una función llamada `cuadrado()` que reciba un número y devuelva su cuadrado.

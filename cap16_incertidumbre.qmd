@@ -1,0 +1,206 @@
+# Incretidumbre y evaluación de los mapas {style="color: #122562"}
+
+La incertidumbre proporciona información valiosa sobre la confiabilidad del modelo de predicción. Un modelo con alta incertidumbre indica que sus predicciones son menos precisas y confiables, mientras que un modelo con baja incertidumbre sugiere mayor confiabilidad.
+
+## Quantile regression forest en la medición de la incertidumbre {style="color: #122562"}
+
+Cuando se modelan propiedades del suelo usando Quantile Regression Forests (QRF), no solo se obtiene una predicción puntual (por ejemplo, la mediana), sino también una distribución completa de posibles valores para cada pixel o punto. Esta distribución permite estimar la incertidumbre asociada al modelo.
+
+A diferencia de un Random Forest tradicional, que entrega un único valor promedio, el QRF calcula cuantiles de la distribución de predicciones generada por todos los árboles. Los cuantiles representan valores por debajo de los cuales cae un porcentaje determinado de la distribución. Por ejemplo:
+
+**Q05 (0.05) →** **límite inferior conservador:** solo el 5% de las predicciones serían menores.
+
+**Q50 (0.50) →** **mediana:** la predicción central más estable del modelo.
+
+**Q95 (0.95) →** **límite superior:** el 95% de las predicciones están por debajo.
+
+Estos cuantiles permiten observar no solo qué predice el modelo, sino qué tan seguro está de dicha predicción.
+
+**El rango intercuantil (Q95 − Q05) como medida de incertidumbre**
+
+El rango intercuantil ancho indica que los árboles del modelo están dando predicciones muy dispersas, por lo que el modelo no está seguro. Un rango pequeño indica predicciones consistentes entre árboles.
+
+Este rango:
+
+-   Resume la dispersión de forma intuitiva.
+
+-   Es robusto frente a valores extremos.
+
+-   Funciona bien en superficies continuas como mapas de propiedades del suelo.
+
+En mapas, este rango permite identificar zonas donde el modelo requiere más datos, áreas con alta variabilidad natural, o donde las covariables no explican bien la propiedad.
+
+::: {.callout-important collapse="true"}
+## IMPORTANTE
+
+Recuerda que el objetivo de esta guía no es generar el mejor modelo ni la mejor predicción. Nuestro interés es el aprendizaje de la metodología para Mapeo Digital de Suelos, por lo que deberá modificar sus propios parámetros y aplicar su criterio para obtener un buen mapa. Vas por un buen camino!
+:::
+
+```{r}
+#| echo: false
+#| output: false 
+
+
+library(randomForest)
+library(ggplot2)
+library(purrr)
+library(caret)
+library(dplyr)
+library(sf)
+library(SuperLearner)
+library(MASS)
+library(arm)
+library(raster)
+library(terra)
+library(tmap)
+library(quantregForest)
+library(ranger)
+library(caret)
+library(ggplot2)
+library(dplyr)
+library(sf)
+library(raster)
+library(tidyr)
+
+data_sf= read_sf("datos/cap16/data_sf.gpkg")
+colnames(data_sf)= c( "id","X0_30_cm","Age","Annual_Prec","BSI","Coverage","DEM","EVPTP_Zone","Landforms","Litology","Mean_Temp","Mean_Temp_cold_q","Mean_Temp_dry_q","Mean_Temp_wam_q", "Mean_Temp_wet_q","MSI","NDVI","Prec_cold_q","Prec_dry_q","Prec_warm_q","Prec_wet","Radiation","SAGA_Wetness_Index" ,"Slope","Soils","TPI_Cont","geometry")
+data_VIF= c( "X0_30_cm","Age","Annual_Prec","Landforms" ,"Coverage","DEM","EVPTP_Zone","Litology","MSI","NDVI","Radiation" ,"SAGA_Wetness_Index", "Slope","Soils","TPI_Cont")
+
+data_sf = read_sf("datos/cap15/data_sf.gpkg")
+colnames(data_sf) = c( "id","X0_30_cm","Age","Annual_Prec","BSI","Coverage","DEM","EVPTP_Zone","Landforms","Litology","Mean_Temp","Mean_Temp_cold_q","Mean_Temp_dry_q","Mean_Temp_wam_q", "Mean_Temp_wet_q","MSI","NDVI","Prec_cold_q","Prec_dry_q","Prec_warm_q","Prec_wet","Radiation","SAGA_Wetness_Index" ,"Slope","Soils","TPI_Cont","geometry")
+
+# Variables que usas en cada set
+data_VSURF = c("X0_30_cm","SAGA_Wetness_Index","Mean_Temp_wet_q","EVPTP_Zone","NDVI","Age","BSI")
+data_VIF   = c("X0_30_cm","Age","Annual_Prec","Landforms","Coverage","DEM","EVPTP_Zone","Litology","MSI","NDVI","Radiation","SAGA_Wetness_Index","Slope","Soils","TPI_Cont")
+colnames(data_sf) = c( "id","X0_30_cm","Age","Annual_Prec","BSI","Coverage","DEM","EVPTP_Zone","Landforms","Litology","Mean_Temp","Mean_Temp_cold_q","Mean_Temp_dry_q","Mean_Temp_wam_q", "Mean_Temp_wet_q","MSI","NDVI","Prec_cold_q","Prec_dry_q","Prec_warm_q","Prec_wet","Radiation","SAGA_Wetness_Index" ,"Slope","Soils","TPI_Cont","geometry")
+# Variables de cada set
+data_VSURF = c("X0_30_cm","SAGA_Wetness_Index","Mean_Temp_wet_q","EVPTP_Zone","NDVI","Age","BSI")
+data_VIF   = c("X0_30_cm","Age","Annual_Prec","Landforms","Coverage","DEM","EVPTP_Zone","Litology","MSI","NDVI","Radiation","SAGA_Wetness_Index","Slope","Soils","TPI_Cont")
+
+# Para entrenar / testear usaremos el set VIF (ajusta si quieres VSURF u otro)
+data = data.frame(data_sf)[ , data_VIF]
+
+# quitar filas con NA en predictora o covariables
+data = data %>% drop_na()
+
+#Partición de datos
+set.seed(2025)
+train_index <- createDataPartition(data$X0_30_cm, p = 0.7, list = FALSE)
+train <- data[train_index, ]
+test  <- data[-train_index, ]
+
+set.seed(2025)
+best_qrf <- ranger(
+  formula = X0_30_cm ~ .,
+  data = train,
+  num.trees = 100,
+  mtry = 4,
+  min.node.size = 5,
+  importance = "permutation",
+  quantreg = TRUE,
+  respect.unordered.factors = "order",
+  seed = 2025
+)
+
+
+
+
+```
+
+El primer paso es cargar el modelo entrenado anteriormente:
+
+::: {.callout-note collapse="true"}
+# Modelo entrenado y datos utilizados
+
+```{r, warning=FALSE}
+#Los datos en formato ráster servirán para que la predicción ahora no sea numérica sino en formato ráster
+lista_raster= list.files(path = "datos/covariables", pattern = ".tif", full.names = TRUE)
+
+raster_stack= raster::stack(lista_raster)
+
+raster_stack_sel <- raster_stack[[data_VIF]]
+names(raster_stack_sel)
+
+
+model_vars <- best_qrf$forest$independent.variable.names
+raster_vars <- names(raster_stack_sel)
+
+setdiff(model_vars, raster_vars)
+
+vals <- as.data.frame(terra::values(raster_stack_sel))
+
+# Identificar qué filas tienen NA (ranger no acepta NA)
+idx_na <- apply(vals, 1, function(x) any(is.na(x)))
+
+# Índices sin NA (válidos)
+non_na_idx <- which(!idx_na)
+
+# Inicializar vectores de predicción vacíos
+pred_q05 <- rep(NA_real_, nrow(vals))
+pred_q95 <- rep(NA_real_, nrow(vals))
+```
+:::
+
+Luego se realiza la predicción dentro de los vectores definidos, sin incluir los NA. Se debe especificar dentro de la predicción qué cuantil se desea obtener:
+
+::: {.callout-note collapse="true"}
+# Predicción de cuantiles
+
+```{r, warning=FALSE}
+# Predecir SOLO en filas completas
+if(length(non_na_idx) > 0){
+
+  pred05 <- predict(
+    best_qrf,
+    data = vals[non_na_idx, ],
+    type = "quantiles",
+    quantiles = 0.05
+  )$predictions
+
+  pred95 <- predict(
+    best_qrf,
+    data = vals[non_na_idx, ],
+    type = "quantiles",
+    quantiles = 0.95
+  )$predictions
+
+  # Guardar en las posiciones correctas
+  pred_q05[non_na_idx] <- pred05
+  pred_q95[non_na_idx] <- pred95
+}
+
+# Crear rasters de salida
+r_q05  <- raster_stack_sel[[1]]; values(r_q05)  <- pred_q05
+plot(r_q05)
+
+r_q95  <- raster_stack_sel[[1]]; values(r_q95)  <- pred_q95
+plot(r_q95)
+```
+:::
+
+Finalmente se estima el rango de incertidumbre que tiene la predicción:
+
+::: {.callout-note collapse="true"}
+# Rango
+
+```{r, warning=FALSE}
+# Rango 95–05 (incertidumbre)
+r_range <- raster_stack_sel[[1]]
+values(r_range) <- pred_q95 - pred_q05
+plot(r_range)
+
+```
+:::
+
+Puede guardar los mapas obtenidos:
+
+::: {.callout-note collapse="true"}
+# Guardar mapas
+
+```{r}
+#Guardar resultados
+writeRaster(r_q05,  "salidas/pred_q05.tif",   overwrite = TRUE)
+writeRaster(r_q95,  "salidas/pred_q95.tif",   overwrite = TRUE)
+writeRaster(r_range,"salidas/pred_uncertainty_range.tif", overwrite = TRUE)
+```
+:::

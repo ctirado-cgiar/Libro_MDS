@@ -1,0 +1,61 @@
+# Referencias {.unnumbered style="color: #122562"}
+
+<div>
+
+Abonamos. (Abonamos). Insumos agropecuarios de calidad. Retrieved Abril 29, 2024, from Abonamos <https://www.abonamos.com/>
+
+Armas, DI, M. Guevara, F. Bezares, R. Vargas, P. Durante, VH Osorio, WA Jiménez y C. Oyonarte. 2022. Base de Datos Armonizada de Suelos del Ecuador 2021 ver 3. Iniciativa de Datos Ambientales. https://doi.org/10.6073/pasta/1560e803953c839e7aedef78ff7d3f6c (Consultado el 17 de mayo de 2024).
+
+Carrión, F. D., Álvarez-Benedicto, M., & Pajuelo, A. (2017). Soil sampling for environmental assessment: A review of spatial variability and scale issues. Science of the Total Environment, 598-599, 280-292. <https://doi.org/10.1016/j.scitotenv.2017.04.100>
+
+Castillo, C. E., & Lara-Ruiz, A. I. (2023)
+
+Corporación Colombiana de Investigación Agropecuaria (CORPOICA). (n.d.). Resultados de Análisis de Laboratorio Suelos en Colombia. Retrieved May 11, 2024, from <https://www.datos.gov.co/widgets/ch4u-f3i5>
+
+Esri. (2023). ¿Qué son los datos ráster? ArcGIS Desktop. <https://desktop.arcgis.com/es/arcmap/latest/manage-data/raster-and-images/what-is-raster-data.htm>.
+
+Equipo de desarrollo de QGIS. (2024). Datos ráster: una suave introducción a los SIG. Documentación QGIS. <https://documentation.qgis.org/> .
+
+Goovaerts, P., 1997. Geostatistics for Natural Resources Evaluation. Oxford University Press, Oxford, NY 496pp.
+
+Hair, J. F., Black, W. C., Babin, B. J., & Anderson, R. E. (2019). Multivariate data analysis (8th ed.). Pearson Education Limited.
+
+James, G., Witten, D., Hastie, T., & Tibshirani, R. (2021). An introduction to statistical learning: with applications in R (2nd ed.). Springer.
+
+Jayo, E. (2020, 7 de octubre). 10 características importantes del lenguaje R (1/2). Edgar Jayo: El blog informático de Edgar Jayo. <https://edgarjayo.wordpress.com/2020/10/07/10-caracteristicas-importantes-del-lenguaje-r-1-2/#:~:text=R%20es%20un%20sistema%20para,por%20los%20Laboratorios%20AT%26T%20Bell>.
+
+Liaw, A. y Wiener, M. (2022). randomForest: bosques aleatorios de Breiman y Cutler para clasificación y regresión. Paquete R versión 4.0.12. <https://cran.r-project.org/package=randomForest>
+
+López-Lozano, R., & Peña-Gallardo, M. A. (2020). Hipercubo latino condicionado para el muestreo de sitios con datos multivariados. Revista de Geociencias, 34(2), 10.13140/RG.2.2.30333.36320.
+
+McKay, M.D., Beckman, R.J., Conover, W.J., 1979. A comparison of three methods for selecting values of input variables in the analysis of output from a computer code. Technometrics 41, 303–312.
+
+Meinshausen, N.; Ridgeway, G. Bosques de regresión cuantil. J. Mach. Aprender. Res. **2006** , 7 , 983–999. \[ [**Google Académico**](https://scholar.google.com/scholar_lookup?title=Quantile+regression+forests&author=Meinshausen,+N.&author=Ridgeway,+G.&publication_year=2006&journal=J.+Mach.+Learn.+Res.&volume=7&pages=983%E2%80%93999) \]
+
+Mendoza, R. B., & Espinoza, A. (2017). Guía Técnica para muestreo de suelos. Universidad Nacional Agraria.
+
+Ministerio del Ambiente (MINAM). (2013). Guía para el muestreo de suelos \[Guía para el Muestreo de Suelos\]. <https://www.minam.gob.pe/calidadambiental/wp-content/uploads/sites/22/2013/10/GUIA-PARA-EL-MUESTREO-DE-SUELOS-final.pdf>
+
+Nikou, M., & Tziachris, P. (2020). Prediction and uncertainty capabilities of quantile regression forests in estimating spatial distribution of soil organic matter. ISPRS International Journal of Geo-Information, 11(2), 130. <https://doi.org/10.3390/ijgi11020130>
+
+Ramirez, F. (1981). Muestreo de suelos para diagnostico de fertilidad. In Informaciones Agronómicas No. 32 (pp. 1-24). Centro de Investigaciones Agrícolas Almirante Norman Borlaug, Universidad de Costa Rica.
+
+R Core Team para espacial (2023). Manipulación de geometrías de funciones simples. r-espacial.<https://github.com/r-spatial/sf> .
+
+Repala, S. (2 de agosto de 2023). Abordar la multicolinealidad: comprender el factor de inflación de varianza (VIF) y las técnicas de mitigación. Medio. [https://medium.com/\@satyarepala/tackling-multicollinearity-understanding-variance-inflation-factor-vif-and-mitigation-techniques-2521ebf024b6](https://medium.com/@satyarepala/tackling-multicollinearity-understanding-variance-inflation-factor-vif-and-mitigation-techniques-2521ebf024b6)
+
+Schulte, E., Davison, D., Dye, T., & Dominik, C. (2012). A Multi-Language Computing Environment for Literate Programming and Reproducible Research. *Journal of Statistical Software*, *46*(3), 1–24. https://doi.org/10.18637/jss.v046.i03
+
+Singh, A. (10 de octubre de 2022). Tres bibliotecas R para EDA automatizada. Análisis Vidhya.[https://www.analyticsvidhya.com/blog/2022/10/tres-r-libraries-for-automated-eda/](https://www.analyticsvidhya.com/blog/2022/10/three-r-libraries-for-automated-eda/)
+
+Thiele, J., Schulte auf'm Erley, G., Glemnitz, M. *et al.* Eficiencia de los diseños de muestreo espacial en la estimación de la abundancia y riqueza de especies de carábidos a nivel de paisaje. *Landsc Ecol* 38 , 919–932 (2023).
+
+Tukey, J. W. (1970). Exploratory data analysis. Addison-Wesley.
+
+Vaysse, K.; Lagacherie, P. Uso del bosque de regresión cuantil para estimar la incertidumbre de los productos de mapeo digital de suelos. Geoderma **2017** , 291 , 55–64.
+
+Warner, R. M. (2013). Understanding statistics in the social sciences: An application-oriented approach (10th ed.). Routledge.
+
+Wickham, H. (2016). R for data science: Practical programming for beginners (2nd ed.). O'Reilly Media.
+
+</div>

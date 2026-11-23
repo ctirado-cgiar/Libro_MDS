@@ -1,0 +1,29 @@
+# Mapeo Digital de Suelos: Principios, técnicas y aplicaciones {.unnumbered style="color: #122562"}
+
+En este documento quarto se explorará la importancia de realizar mapeo digital de suelos, cómo hacerlo y que herramientas utilizar. Se utilizará el lenguaje de programación R para analizar y visualizar datos de suelos de manera eficiente y efectiva.
+
+**Objetivo General**
+
+Proporcionar los conocimientos necesarios para desarrollar habilidades que les permitan caracterizar, analizar y mapear los suelos de manera precisa y eficiente mediante el uso del Mapeo Digital de Suelos (MDS).
+
+**Objetivos Específicos**
+
+- Comprender los principios fundamentales del MDS.
+
+- Adquirir conocimientos y habilidades en el uso del software R para la manipulación de datos, generación de visualizaciones y desarrollo de modelos de machine learning aplicados al MDS.
+
+- Identificar la importancia del MDS en la toma de decisiones en áreas como la agricultura, la planificación territorial, la conservación y el manejo de recursos naturales, entre otros contextos relevantes.
+
+- Tener la habilidad de reproducir estas metodologías y técnicas de manera independiente, asegurando su aplicación efectiva en futuras investigaciones y proyectos en sus respectivos campos de trabajo.
+
+**Autores:**
+
+- Maria Camila Giraldo Carvajal, Research Associate
+- Javier Mauricio Martín, Senior Research Associate
+- Andrés Felipe Velez Gruezo , Research Associate
+- Luis Felipe Castelblanco, PhD Student
+- Mayesse Da Silva, Senior Scientist
+
+**Actualización:** Cristian Tirado-Murcia, Research Associate
+
+Este documento ha sido elaborado en el marco de los proyectos Clima-LoCa, financiado por la iniciativa DeSIRA de la Unión Europea, y Fertilice Mejor, financiado por el Departamento de Agricultura de los Estados Unidos (USDA). Su contenido es responsabilidad exclusiva de los autores y, en ningún caso, puede considerarse que refleja la posición de la Unión Europea ni de los Estados Unidos.

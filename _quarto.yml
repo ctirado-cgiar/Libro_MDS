@@ -1,0 +1,49 @@
+project:
+  type: book
+
+book:
+  title: "Mapeo Digital de Suelos"
+  author: "Alianza de Bioversity International y el CIAT"
+  date: "11/26/2025"
+  chapters:
+  
+    
+    - index.qmd #1 
+    - cap1_Rstudio.qmd #2
+    - cap2_Manejo_basicoR.qmd #3
+    - cap3_funciones.qmd #4
+    - cap4_graficos.qmd #5
+    - cap5_manipulacion.qmd #6
+    - cap6_Introduccion.qmd #7
+    - cap7_editVecyRaster.qmd #8
+    - cap8_rasteredit.qmd #9
+    - cap9_visualizar.qmd #10Revisar tmap
+    - cap10_coleccion.qmd #11
+    - cap11_muestreo.qmd #12
+    - cap12_limpieza.qmd #13 revisar algo en spline
+    - cap13_seleccion.qmd #14
+    - cap14_herramientas_geo.qmd #15
+    - cap15_modelo.qmd #16
+    - cap16_incertidumbre.qmd #17
+    - cap17_aplicacion.qmd #18
+    # - cap18_references.qmd #19
+    
+
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    args: ["--headless=new"]
+    number-sections: true
+  pdf:
+    toc: true
+    colorlinks: true
+
+editor: visual
+
+
+execute:
+  freeze: auto

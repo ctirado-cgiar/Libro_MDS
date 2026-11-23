@@ -1,0 +1,35 @@
+# ---------------------------------------------------------------
+# Libro "Mapeo Digital de Suelos": qué se sube a GitHub
+# Se ignora todo y luego se permite solo lo que el libro necesita
+# ---------------------------------------------------------------
+
+/*
+!/.gitignore
+!/_quarto.yml
+!/index.qmd
+!/cap*.qmd
+!/references.bib
+!/DSM.Rproj
+!/datos/
+!/_freeze/
+!/salidas/
+!/capitulos/
+
+# capitulos/: solo las imágenes del libro (los datos están en datos/)
+/capitulos/*/*
+!/capitulos/*/Images/
+!/capitulos/*/images/
+
+# salidas/: lo genera el código; solo se sube la carpeta vacía
+/salidas/*
+!/salidas/.gitkeep
+
+# Archivos temporales de R, RStudio y SIG
+.Rproj.user/
+.Rhistory
+.RData
+*.aux.xml
+*.ovr
+
+/.quarto/
+**/*.quarto_ipynb

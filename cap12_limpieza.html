@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>12&nbsp; Limpieza, procesamiento y análisis exploratorio de datos de campo – Mapeo Digital de Suelos</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./cap13_seleccion.html" rel="next">
+<link href="./cap11_muestreo.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cap12_limpieza.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Limpieza, procesamiento y análisis exploratorio de datos de campo</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Mapeo Digital de Suelos</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mapeo Digital de Suelos: Principios, técnicas y aplicaciones</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap1_Rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R y un poco de su historia</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap2_Manejo_basicoR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Manejo básico de R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap3_funciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Condicionales, ciclos y funciones</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap4_graficos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Gráficos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap5_manipulacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulación de datos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap6_Introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción al Mapeo Digital de Suelos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap7_editVecyRaster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Procesamiento de datos espaciales- Vectoriales</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap8_rasteredit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Procesamiento de datos espaciales- Ráster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap9_visualizar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Visualización de datos espaciales</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap10_coleccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Colección y armonización de covariables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap11_muestreo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estrategia de muestreo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap12_limpieza.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Limpieza, procesamiento y análisis exploratorio de datos de campo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap13_seleccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Selección de covariables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap14_herramientas_geo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Herramientas y métodos para la predicción espacial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap15_modelo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Predicción espacial: Modelamiento y validación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap16_incertidumbre.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Incretidumbre y evaluación de los mapas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap17_aplicacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Toma de decisiones a partir del DSM</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#limpieza-de-valores-nulos" id="toc-limpieza-de-valores-nulos" class="nav-link active" data-scroll-target="#limpieza-de-valores-nulos"><span class="header-section-number">12.1</span> Limpieza de valores nulos</a></li>
+  <li><a href="#estandarización-de-valores-y-unidades" id="toc-estandarización-de-valores-y-unidades" class="nav-link" data-scroll-target="#estandarización-de-valores-y-unidades"><span class="header-section-number">12.2</span> Estandarización de valores y unidades</a></li>
+  <li><a href="#exploración-de-datos-de-campo" id="toc-exploración-de-datos-de-campo" class="nav-link" data-scroll-target="#exploración-de-datos-de-campo"><span class="header-section-number">13</span> Exploración de datos de campo</a>
+  <ul class="collapse">
+  <li><a href="#análisis-estadístico" id="toc-análisis-estadístico" class="nav-link" data-scroll-target="#análisis-estadístico"><span class="header-section-number">13.1</span> Análisis estadístico</a></li>
+  <li><a href="#análisis-gráfico" id="toc-análisis-gráfico" class="nav-link" data-scroll-target="#análisis-gráfico"><span class="header-section-number">13.2</span> Análisis gráfico</a></li>
+  <li><a href="#equal--area-spline" id="toc-equal--area-spline" class="nav-link" data-scroll-target="#equal--area-spline"><span class="header-section-number">13.3</span> Equal- area spline</a>
+  <ul class="collapse">
+  <li><a href="#librería-mpspline2" id="toc-librería-mpspline2" class="nav-link" data-scroll-target="#librería-mpspline2"><span class="header-section-number">13.3.1</span> Librería mpspline2</a></li>
+  </ul></li>
+  <li><a href="#ejercicio-de-recopilación" id="toc-ejercicio-de-recopilación" class="nav-link" data-scroll-target="#ejercicio-de-recopilación"><span class="header-section-number">13.4</span> Ejercicio de recopilación</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Limpieza, procesamiento y análisis exploratorio de datos de campo</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Luego de haber realizado el muestreo en campo y tener los resultados de los análisis corrrespondientes a los factores de interés. Se procede a limpiar los datos de acuerdo a los estándares definidos.</p>
+<section id="limpieza-de-valores-nulos" class="level2" style="color: #122562" data-number="12.1">
+<h2 style="color: #122562" data-number="12.1" class="anchored" data-anchor-id="limpieza-de-valores-nulos"><span class="header-section-number">12.1</span> Limpieza de valores nulos</h2>
+<p>En el proceso de transcripción de los datos suele presentar errores en los datos obtenidos en campo y luego pueden alterar el análisis que se realice. Es importante resaltar que de aquí en adelante es crucial el conocimiento de la persona que esté mapeando; el criterio y la experiencia permiten que la interpetación y edición de los datos tengan éxito.</p>
+<p>Primero se deben haber definido unas estándares previos que resuelvan: qué datos son necesarios en el muestreo, qué unidades se van a utilizar, quiénes tomaron los datos y con qué métodos. Esto se vuelve necesario para saber a qué fuentes acudir cuándo los datos presenten muchas confusiones.</p>
+<p><strong>Importación de datos</strong></p>
+<p>Se importan los datos del muestreo en R utilizando las funciones adecuadas según el formato que tengan los datos (por ejemplo, <code>read.csv()</code> para archivos CSV, <code>read_excel()</code> para archivos Excel, etc.).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Librerías y datos
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Para el spline de profundidad se usa la librería mpspline2 (disponible en CRAN). Si no la tiene, instálela con:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("mpspline2")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Hmisc)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mpspline2)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pastecs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>puntos_AOI<span class="ot">=</span> <span class="fu">st_read</span>(<span class="st">"datos/cap12/puntos_final.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dataframe <span class="ot">=</span> <span class="fu">as.data.frame</span>(puntos_AOI)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dataset <span class="ot">=</span> <span class="fu">read_excel</span>(<span class="st">"datos/cap12/datos_suelo_EC.xlsx"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df<span class="ot">=</span> <span class="fu">data.frame</span>(dataset) <span class="sc">%&gt;%</span> <span class="fu">type.convert</span>(<span class="at">na.strings =</span> <span class="st">"NA"</span>, <span class="at">as.is =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>PDIS <span class="sc">%&gt;%</span> pastecs<span class="sc">::</span><span class="fu">stat.desc</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     nbr.val     nbr.null       nbr.na          min          max        range 
+ 597.0000000    0.0000000  430.0000000    0.0200000  146.2000000  146.1800000 
+         sum       median         mean      SE.mean CI.mean.0.95          var 
+4682.4900000    2.8600000    7.8433668    0.6123515    1.2026292  223.8597126 
+     std.dev     coef.var 
+  14.9619421    1.9075918 </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Seleccionar columnas relevantes</strong></p>
+<p>También se puede hacer un set aparte, seleccionando solo las columnas de interés. Donde se debe especificar que columnas se quieren conservar en lugar de eliminar las que no se necesitan:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Seleccionar variables
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df<span class="ot">=</span> df[<span class="fu">c</span>(<span class="st">'ID'</span>, <span class="st">'CORX'</span>, <span class="st">'CORY'</span>, <span class="st">'ARENA'</span>, <span class="st">'LIMO'</span>, <span class="st">'ARCILLA'</span>, <span class="st">'MO'</span>, <span class="st">'CO'</span>, <span class="st">'LIMSUP'</span>, <span class="st">'LIMINF'</span>, <span class="st">'PHAQ'</span>)] </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df<span class="ot">=</span> <span class="fu">na.omit</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>Se realiza una visualización reducida de los datos, para tener una idea de los datos recolectados.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Visualizar datos
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ID   CORX    CORY ARENA LIMO ARCILLA   MO    CO LIMSUP LIMINF PHAQ
+1 2570 692255 9792525 32.00 60.0    8.00 25.6 14.80      0     25 5.80
+3 2571 693375 9792623 12.00 38.0   50.00 56.4 32.70      0     15 5.70
+4 2571 693375 9792623 14.00 32.0   54.00 21.8 12.60     15     35 6.00
+5 2571 693375 9792623 28.00 24.0   48.00  4.5  2.60     35    100 5.90
+6 6044 719140 9822091 53.54 22.4   24.06 12.8  7.43      0     20 7.02
+7 6044 719140 9822091 71.54 14.4   14.06  6.0  3.48     20     50 7.00</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Visión general de los datos</strong></p>
+<p>La función <code>skim()</code> del paquete skimr, sirve para obtener una visión general de las distribución de los datos en el dataframe.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Código
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>skim_df <span class="ot">=</span> skimr<span class="sc">::</span><span class="fu">skim</span>(df)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>skim_df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">df</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">597</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">11</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ID</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6544.90</td>
+<td style="text-align: right;">963.93</td>
+<td style="text-align: right;">2570.00</td>
+<td style="text-align: right;">6252.00</td>
+<td style="text-align: right;">6339.00</td>
+<td style="text-align: right;">6417.00</td>
+<td style="text-align: right;">9982.00</td>
+<td style="text-align: left;">▁▁▇▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CORX</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">713737.59</td>
+<td style="text-align: right;">6752.44</td>
+<td style="text-align: right;">692255.00</td>
+<td style="text-align: right;">710244.00</td>
+<td style="text-align: right;">714355.00</td>
+<td style="text-align: right;">718367.00</td>
+<td style="text-align: right;">728318.00</td>
+<td style="text-align: left;">▁▂▆▇▂</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CORY</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9801615.11</td>
+<td style="text-align: right;">12410.87</td>
+<td style="text-align: right;">9777022.00</td>
+<td style="text-align: right;">9790992.00</td>
+<td style="text-align: right;">9804369.00</td>
+<td style="text-align: right;">9811640.00</td>
+<td style="text-align: right;">9822091.00</td>
+<td style="text-align: left;">▅▅▅▇▅</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARENA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">44.09</td>
+<td style="text-align: right;">18.38</td>
+<td style="text-align: right;">3.18</td>
+<td style="text-align: right;">30.28</td>
+<td style="text-align: right;">43.44</td>
+<td style="text-align: right;">57.18</td>
+<td style="text-align: right;">87.94</td>
+<td style="text-align: left;">▂▇▇▅▂</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIMO</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">29.00</td>
+<td style="text-align: right;">9.40</td>
+<td style="text-align: right;">2.00</td>
+<td style="text-align: right;">23.26</td>
+<td style="text-align: right;">29.26</td>
+<td style="text-align: right;">34.86</td>
+<td style="text-align: right;">68.76</td>
+<td style="text-align: left;">▂▆▇▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARCILLA</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">26.91</td>
+<td style="text-align: right;">16.03</td>
+<td style="text-align: right;">3.04</td>
+<td style="text-align: right;">14.82</td>
+<td style="text-align: right;">20.36</td>
+<td style="text-align: right;">38.36</td>
+<td style="text-align: right;">78.46</td>
+<td style="text-align: left;">▇▅▃▂▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MO</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">55.39</td>
+<td style="text-align: right;">36.97</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">26.10</td>
+<td style="text-align: right;">48.40</td>
+<td style="text-align: right;">82.10</td>
+<td style="text-align: right;">187.80</td>
+<td style="text-align: left;">▇▆▅▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CO</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">32.13</td>
+<td style="text-align: right;">21.44</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">15.14</td>
+<td style="text-align: right;">28.07</td>
+<td style="text-align: right;">47.62</td>
+<td style="text-align: right;">108.93</td>
+<td style="text-align: left;">▇▆▅▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">LIMSUP</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">23.11</td>
+<td style="text-align: right;">27.28</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">20.00</td>
+<td style="text-align: right;">35.00</td>
+<td style="text-align: right;">130.00</td>
+<td style="text-align: left;">▇▃▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIMINF</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">57.76</td>
+<td style="text-align: right;">35.31</td>
+<td style="text-align: right;">8.00</td>
+<td style="text-align: right;">30.00</td>
+<td style="text-align: right;">50.00</td>
+<td style="text-align: right;">80.00</td>
+<td style="text-align: right;">160.00</td>
+<td style="text-align: left;">▇▅▃▂▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PHAQ</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6.69</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">5.70</td>
+<td style="text-align: right;">6.48</td>
+<td style="text-align: right;">6.69</td>
+<td style="text-align: right;">6.88</td>
+<td style="text-align: right;">7.93</td>
+<td style="text-align: left;">▁▅▇▂▁</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="estandarización-de-valores-y-unidades" class="level2" style="color: #122562" data-number="12.2">
+<h2 style="color: #122562" data-number="12.2" class="anchored" data-anchor-id="estandarización-de-valores-y-unidades"><span class="header-section-number">12.2</span> Estandarización de valores y unidades</h2>
+<p>En los procesos de transcripción, cálculos en campo, estimaciones y demás, se puede presentar modificación en los datos lo que aumenta los errores en el estudio. Se procede a filtrar los datos que se salgan de la normalidad de cada variable y es necesario definir si fueron errores de cálculo de tipeo. Para esto se debe ubicar en cada variable esos valores y transformarlos o eliminarlos si es el caso:</p>
+<p><strong>Conversión de unidades</strong></p>
+<p>Algunos valores pueden estar en unidades diferentes. Luego de filtrarlos se deben convertir a una unidad común, esto se realiza utilizando factores de conversión:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Convertir unidades
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conversión de unidades</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>DA <span class="ot">=</span> df<span class="sc">$</span>ARCILLA <span class="sc">/</span> <span class="dv">10</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ID   CORX    CORY ARENA LIMO ARCILLA   MO    CO LIMSUP LIMINF PHAQ    DA
+1 2570 692255 9792525 32.00 60.0    8.00 25.6 14.80      0     25 5.80 0.800
+3 2571 693375 9792623 12.00 38.0   50.00 56.4 32.70      0     15 5.70 5.000
+4 2571 693375 9792623 14.00 32.0   54.00 21.8 12.60     15     35 6.00 5.400
+5 2571 693375 9792623 28.00 24.0   48.00  4.5  2.60     35    100 5.90 4.800
+6 6044 719140 9822091 53.54 22.4   24.06 12.8  7.43      0     20 7.02 2.406
+7 6044 719140 9822091 71.54 14.4   14.06  6.0  3.48     20     50 7.00 1.406</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>También se pueden generar nuevas columnas con la información derivada de algunos datos tomados en campo:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Agregar cálculos
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear nueva columna con el resultado de la multiplicación</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Carbono <span class="ot">=</span> df<span class="sc">$</span>MO <span class="sc">/</span> df<span class="sc">$</span>CO</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Carbono <span class="ot">=</span> Carbono</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Ver el dataframe resultante</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ID   CORX    CORY ARENA LIMO ARCILLA   MO    CO LIMSUP LIMINF PHAQ    DA
+1 2570 692255 9792525 32.00 60.0    8.00 25.6 14.80      0     25 5.80 0.800
+3 2571 693375 9792623 12.00 38.0   50.00 56.4 32.70      0     15 5.70 5.000
+4 2571 693375 9792623 14.00 32.0   54.00 21.8 12.60     15     35 6.00 5.400
+5 2571 693375 9792623 28.00 24.0   48.00  4.5  2.60     35    100 5.90 4.800
+6 6044 719140 9822091 53.54 22.4   24.06 12.8  7.43      0     20 7.02 2.406
+7 6044 719140 9822091 71.54 14.4   14.06  6.0  3.48     20     50 7.00 1.406
+   Carbono
+1 1.729730
+3 1.724771
+4 1.730159
+5 1.730769
+6 1.722746
+7 1.724138</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="exploración-de-datos-de-campo" class="level1" style="color: #122562" data-number="13">
+<h1 style="color: #122562" data-number="13"><span class="header-section-number">13</span> Exploración de datos de campo</h1>
+<p>El análisis exploratorio de datos (EDA, por sus siglas en inglés de Exploratory Data Analysis) corresponde a la fase de análisis de datos donde se busca entender, visualizar y resumir el comportamiento del conjunto de los datos.</p>
+<p>Este análisis resulta en una identificación de patrones, valores atípicos y nulos. Además permite formular hipótesis que pueden ser útiles para el análisis posterior y la toma de decisiones.</p>
+<p>Se debe cargar la información en un formato que permita su manipulación estadística y gráfica, se recomienda utilizar archivos en formato data.frame</p>
+<section id="análisis-estadístico" class="level2" style="color: #122562" data-number="13.1">
+<h2 style="color: #122562" data-number="13.1" class="anchored" data-anchor-id="análisis-estadístico"><span class="header-section-number">13.1</span> Análisis estadístico</h2>
+<p>En el análisis estadístico se incluye la recolección, organización e interpretación de los datos. Se aplican distintos métodos estadísticos para analizar y entender los datos. Se pueden utilizar las funciones específicas para obtener los valores de la media, mediana, moda, desviación estándar, varianza, simetría de los datos, entre otros.</p>
+<p><strong>Descripción de datos</strong></p>
+<p>Se obtiene información general del tipo y la cantidad de datos que se tiene:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Tipos de datos
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   597 obs. of  13 variables:
+ $ ID     : int  2570 2571 2571 2571 6044 6044 6045 6045 6045 6048 ...
+ $ CORX   : int  692255 693375 693375 693375 719140 719140 719263 719263 719263 721384 ...
+ $ CORY   : int  9792525 9792623 9792623 9792623 9822091 9822091 9821812 9821812 9821812 9816013 ...
+ $ ARENA  : num  32 12 14 28 53.5 ...
+ $ LIMO   : num  60 38 32 24 22.4 ...
+ $ ARCILLA: num  8 50 54 48 24.1 ...
+ $ MO     : num  25.6 56.4 21.8 4.5 12.8 6 30.5 26.6 5.7 32.3 ...
+ $ CO     : num  14.8 32.7 12.6 2.6 7.43 ...
+ $ LIMSUP : int  0 0 15 35 0 20 0 25 60 0 ...
+ $ LIMINF : int  25 15 35 100 20 50 25 60 140 25 ...
+ $ PHAQ   : num  5.8 5.7 6 5.9 7.02 7 7.93 7.29 7.54 6.99 ...
+ $ DA     : num  0.8 5 5.4 4.8 2.41 ...
+ $ Carbono: num  1.73 1.72 1.73 1.73 1.72 ...
+ - attr(*, "na.action")= 'omit' Named int [1:430] 2 8 9 15 16 19 20 23 24 27 ...
+  ..- attr(*, "names")= chr [1:430] "2" "8" "9" "15" ...</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Luego se utilizan medidas descriptivas como la media, la mediana, la moda, la desviación estándar y varianza, para resumir y describir las características principales de los datos.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Medidas descriptivas
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       ID            CORX             CORY             ARENA      
+ Min.   :2570   Min.   :692255   Min.   :9777022   Min.   : 3.18  
+ 1st Qu.:6252   1st Qu.:710244   1st Qu.:9790992   1st Qu.:30.28  
+ Median :6339   Median :714355   Median :9804369   Median :43.44  
+ Mean   :6545   Mean   :713738   Mean   :9801615   Mean   :44.09  
+ 3rd Qu.:6417   3rd Qu.:718367   3rd Qu.:9811640   3rd Qu.:57.18  
+ Max.   :9982   Max.   :728318   Max.   :9822091   Max.   :87.94  
+      LIMO          ARCILLA            MO               CO        
+ Min.   : 2.00   Min.   : 3.04   Min.   :  0.30   Min.   :  0.17  
+ 1st Qu.:23.26   1st Qu.:14.82   1st Qu.: 26.10   1st Qu.: 15.14  
+ Median :29.26   Median :20.36   Median : 48.40   Median : 28.07  
+ Mean   :29.00   Mean   :26.91   Mean   : 55.39   Mean   : 32.13  
+ 3rd Qu.:34.86   3rd Qu.:38.36   3rd Qu.: 82.10   3rd Qu.: 47.62  
+ Max.   :68.76   Max.   :78.46   Max.   :187.80   Max.   :108.93  
+     LIMSUP           LIMINF            PHAQ             DA       
+ Min.   :  0.00   Min.   :  8.00   Min.   :5.700   Min.   :0.304  
+ 1st Qu.:  0.00   1st Qu.: 30.00   1st Qu.:6.480   1st Qu.:1.482  
+ Median : 20.00   Median : 50.00   Median :6.690   Median :2.036  
+ Mean   : 23.11   Mean   : 57.76   Mean   :6.689   Mean   :2.691  
+ 3rd Qu.: 35.00   3rd Qu.: 80.00   3rd Qu.:6.880   3rd Qu.:3.836  
+ Max.   :130.00   Max.   :160.00   Max.   :7.930   Max.   :7.846  
+    Carbono     
+ Min.   :1.717  
+ 1st Qu.:1.724  
+ Median :1.724  
+ Mean   :1.724  
+ 3rd Qu.:1.724  
+ Max.   :1.765  </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Desviación estándar
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>a<span class="ot">=</span> <span class="fu">sd</span>(df<span class="sc">$</span>MO)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>a</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 36.97048</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Una libreria más completa para describir estadisticamente los datos es Pastecs</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>EDA completo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stat.desc</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       ID         CORX         CORY        ARENA         LIMO
+nbr.val      5.970000e+02 5.970000e+02 5.970000e+02 5.970000e+02 5.970000e+02
+nbr.null     0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
+nbr.na       0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00
+min          2.570000e+03 6.922550e+05 9.777022e+06 3.180000e+00 2.000000e+00
+max          9.982000e+03 7.283180e+05 9.822091e+06 8.794000e+01 6.876000e+01
+range        7.412000e+03 3.606300e+04 4.506900e+04 8.476000e+01 6.676000e+01
+sum          3.907303e+06 4.261013e+08 5.851564e+09 2.632052e+04 1.731206e+04
+median       6.339000e+03 7.143550e+05 9.804369e+06 4.344000e+01 2.926000e+01
+mean         6.544896e+03 7.137376e+05 9.801615e+06 4.408797e+01 2.899843e+01
+SE.mean      3.945115e+01 2.763591e+02 5.079431e+02 7.523193e-01 3.848066e-01
+CI.mean.0.95 7.748018e+01 5.427560e+02 9.975759e+02 1.477519e+00 7.557418e-01
+var          9.291668e+05 4.559548e+07 1.540297e+08 3.378927e+02 8.840144e+01
+std.dev      9.639330e+02 6.752443e+03 1.241087e+04 1.838186e+01 9.402204e+00
+coef.var     1.472801e-01 9.460680e-03 1.266207e-03 4.169359e-01 3.242315e-01
+                  ARCILLA           MO           CO       LIMSUP       LIMINF
+nbr.val      5.970000e+02 5.970000e+02 5.970000e+02   597.000000 5.970000e+02
+nbr.null     0.000000e+00 0.000000e+00 0.000000e+00   245.000000 0.000000e+00
+nbr.na       0.000000e+00 0.000000e+00 0.000000e+00     0.000000 0.000000e+00
+min          3.040000e+00 3.000000e-01 1.700000e-01     0.000000 8.000000e+00
+max          7.846000e+01 1.878000e+02 1.089300e+02   130.000000 1.600000e+02
+range        7.542000e+01 1.875000e+02 1.087600e+02   130.000000 1.520000e+02
+sum          1.606742e+04 3.306906e+04 1.918180e+04 13795.000000 3.448000e+04
+median       2.036000e+01 4.840000e+01 2.807000e+01    20.000000 5.000000e+01
+mean         2.691360e+01 5.539206e+01 3.213032e+01    23.107203 5.775544e+01
+SE.mean      6.561680e-01 1.513101e+00 8.776759e-01     1.116464 1.444949e+00
+CI.mean.0.95 1.288683e+00 2.971658e+00 1.723714e+00     2.192683 2.837812e+00
+var          2.570422e+02 1.366816e+03 4.598780e+02   744.156274 1.246464e+03
+std.dev      1.603254e+01 3.697048e+01 2.144477e+01    27.279228 3.530529e+01
+coef.var     5.957039e-01 6.674328e-01 6.674309e-01     1.180551 6.112894e-01
+                     PHAQ           DA      Carbono
+nbr.val      5.970000e+02  597.0000000 5.970000e+02
+nbr.null     0.000000e+00    0.0000000 0.000000e+00
+nbr.na       0.000000e+00    0.0000000 0.000000e+00
+min          5.700000e+00    0.3040000 1.717172e+00
+max          7.930000e+00    7.8460000 1.764706e+00
+range        2.230000e+00    7.5420000 4.753417e-02
+sum          3.993600e+03 1606.7420000 1.029239e+03
+median       6.690000e+00    2.0360000 1.723971e+00
+mean         6.689447e+00    2.6913601 1.724019e+00
+SE.mean      1.277269e-02    0.0656168 7.497567e-05
+CI.mean.0.95 2.508495e-02    0.1288683 1.472486e-04
+var          9.739550e-02    2.5704221 3.355946e-06
+std.dev      3.120825e-01    1.6032536 1.831924e-03
+coef.var     4.665296e-02    0.5957039 1.062590e-03</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="análisis-gráfico" class="level2" style="color: #122562" data-number="13.2">
+<h2 style="color: #122562" data-number="13.2" class="anchored" data-anchor-id="análisis-gráfico"><span class="header-section-number">13.2</span> Análisis gráfico</h2>
+<p><strong>Histograma</strong></p>
+<p>Una forma útil de explorar las variables numéricas es con histogramas. Estos podemos hacerlos con el comando hist(), donde ponemos como argumento el nombre del dataframe seguido de $ y el nombre de la variable que queremos graficar.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Histograma
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(df<span class="sc">$</span>MO )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap12_limpieza_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Boxplot</strong></p>
+<p>Un diagrama de caja y bigotes, también conocido como boxplot, es un gráfico que representa un conjunto de datos estadísticos de manera visual utilizando los cuartiles, también se muestra la dispersión de una serie de datos de forma rápida y eficiente.</p>
+<p>Aquellos valores que sobrepasan los límites superior e inferior son los que se conocen como valores atípicos (outliers).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Boxplot
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Trazar un boxplot de los datos</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(df<span class="sc">$</span>MO, <span class="at">main =</span> <span class="st">"Boxplot"</span>, <span class="at">ylab =</span> <span class="st">"Valores"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap12_limpieza_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>EDA Automático</strong></p>
+<p>Pero hay una forma más eficiente de realizar este proceso, mediante librerías que realizan el EDA de forma automática y generando informes detallados para acelerar el proceso de exploración de un nuevo conjunto de datos.</p>
+<p>Los tres paquetes de R ( DataMaid , DataExplorer y SmartEDA ) son muy eficaces para realizar EDA en un conjunto de datos determinado y los científicos de datos de una organización pueden considerar su implementación.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>SmartEDA
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Al correr la siguiente linea se creará un archivo HTML con un reporte estadistico automatico de los datos</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#library(SmartEDA)</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ExpReport(df,op_file='EDA_Ecuador.html')</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="equal--area-spline" class="level2" style="color: #122562" data-number="13.3">
+<h2 style="color: #122562" data-number="13.3" class="anchored" data-anchor-id="equal--area-spline"><span class="header-section-number">13.3</span> Equal- area spline</h2>
+<p>El Equal - area spline también conocido como spline de suavizado cuadrático de áreas iguales, es un tipo específico de función spline que es utilizada en diversos campos, particularmente en la ciencia del suelo y los estudios ambientales.</p>
+<p>Esta función matemática ajusta una curva suave a través de una serie de puntos de datos, conservando al mismo tiempo el área total bajo los datos originales y la curva ajustada. Lo que facilita el análisis y modelamiento en funciones de profundidad continuas, como la variación de las propiedades del suelo (carbono orgánico, pH) u otras variables ambientales a diferentes profundidades.</p>
+<p>Al suavizar dichas fluctuaciones de los datos, el spline proporciona una representación más interpretable e informativa de la tendencia subyacente.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.sciencedirect.com/science/article/abs/pii/S0016706112002170"><img src="capitulos/Cap12/Images/1-s2.0-S0016706112002170-gr2-01.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img"></a></p>
+</figure>
+</div>
+<figcaption>Funciones spline, fuente: Odgers et al, 2012</figcaption>
+</figure>
+</div>
+<section id="librería-mpspline2" class="level3" data-number="13.3.1">
+<h3 data-number="13.3.1" class="anchored" data-anchor-id="librería-mpspline2"><span class="header-section-number">13.3.1</span> Librería mpspline2</h3>
+<p>Para realizar el Spline en R, se utiliza la librería <code>mpspline2</code>, mediante la función <code>mpspline()</code>, la cual ajusta la función y preserva la masa (picnofiláctica) a datos de perfil de suelo. La función toma un <code>data.frame</code> con el identificador del perfil, la profundidad superior, la profundidad inferior y la propiedad, y devuelve los valores estimados para las profundidades estándar definidas.</p>
+<blockquote class="blockquote">
+<p>Nota: la versión original de este capítulo usaba la función <code>ea_spline()</code> de la librería <code>ithir</code>, que ya no se puede instalar. <code>mpspline2</code> implementa el mismo método (<em>equal-area spline</em>, Bishop et al., 1999).</p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spline
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Se filtran los valores que están en profundidades menores a 30 para excluir los datos del proceso</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df_lower_30 <span class="ot">=</span> df <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(ID) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">LIMINF =</span> <span class="fu">max</span>(LIMINF)) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(LIMINF <span class="sc">&lt;</span> <span class="dv">29</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">=</span> df[<span class="sc">!</span>(df<span class="sc">$</span>ID <span class="sc">%in%</span> df_lower_30<span class="sc">$</span>ID), ]</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Se definen las variables donde se encuentran los datos de interés y se define la profundidad estándar y la propiedad a obtener</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>lon <span class="ot">=</span> df<span class="sc">$</span>CORX</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>lat <span class="ot">=</span> df<span class="sc">$</span>CORY</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>id <span class="ot">=</span> df<span class="sc">$</span>ID</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>top <span class="ot">=</span> df<span class="sc">$</span>LIMSUP</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>bottom <span class="ot">=</span> df<span class="sc">$</span>LIMINF</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>stand_depth <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">30</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>Propiedad <span class="ot">=</span> df<span class="sc">$</span>MO</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#Se crea un dataset con el perfil: identificador, profundidad superior, profundidad inferior y propiedad</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>prof1 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(id, top, bottom, Propiedad)</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co">#Con esta función se realiza el spline de la propiedad definida previamente</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>Propiedad_spline <span class="ot">&lt;-</span> <span class="fu">mpspline</span>(prof1, <span class="at">var_name =</span> <span class="st">"Propiedad"</span>, <span class="at">lam =</span> <span class="fl">0.1</span>, <span class="at">d =</span> stand_depth)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Site 9627 only has data for one depth range and was not splined.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Site 9964 only has data for one depth range and was not splined.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Site 9965 only has data for one depth range and was not splined.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Se guardan los datos obtenidos: identificador del perfil y valor estimado de 0 a 30 cm</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>datos <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">id =</span> <span class="fu">names</span>(Propiedad_spline),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">X0.30.cm =</span> <span class="fu">vapply</span>(Propiedad_spline, <span class="cf">function</span>(x) <span class="cf">if</span> (<span class="fu">length</span>(x<span class="sc">$</span>est_dcm)) <span class="fu">unname</span>(x<span class="sc">$</span>est_dcm[<span class="dv">1</span>]) <span class="cf">else</span> <span class="cn">NA_real_</span>, <span class="fu">numeric</span>(<span class="dv">1</span>))</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(datos)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       id X0.30.cm
+2571 2571 41.50709
+6044 6044 11.36563
+6045 6045 30.40786
+6048 6048 31.25905
+6083 6083 26.70257
+6084 6084 39.60385</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Se crea un dataframe con los datos obtenidos en el spline</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>datos<span class="ot">=</span> <span class="fu">data.frame</span>(<span class="fu">lapply</span>(datos, type.convert,<span class="at">as.is =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Se separan las coordenadas de cada punto, diferenciada por el ID</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>coord<span class="ot">=</span> df[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>] <span class="sc">%&gt;%</span> <span class="fu">unique</span>(<span class="at">by =</span> <span class="st">"ID"</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Se crea un nuevo vector de nombres </span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>nuevos_nombres <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"id"</span>, <span class="st">"lon"</span>, <span class="st">"lat"</span>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Luego se asignan los nuevos nombres al dataframe</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(coord) <span class="ot">=</span> nuevos_nombres</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Se unen los datos de MO para cada punto y se le agrega su coordenada mediante el ID</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>data_final<span class="ot">=</span><span class="fu">right_join</span>(datos,coord, <span class="at">by=</span> <span class="st">"id"</span>)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Se crea un objeto shapefile a partir del dataframe</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>datos_spline_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(data_final, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">32717</span>) <span class="co">#Se especifíca el sistema de referencia de coordenadas (CRS) según los datos</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Se cargan los datos del ráster y el buffer de las covariables</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>Buffer <span class="ot">=</span> <span class="fu">st_read</span>(<span class="st">"datos/cap12/buffer_300m_rasterizado.gpkg"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>DEM <span class="ot">=</span> <span class="fu">raster</span>(<span class="st">"datos/covariables/DEM.tif"</span>)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="co">#Se grafican los valores del spline dentro del DEM </span></span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_view</span>(<span class="st">"view"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[nothing to show] no data layers defined</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(DEM) <span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_raster</span>() <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(datos_spline_sf) <span class="sc">+</span> </span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>(<span class="st">"X0.30.cm"</span>, <span class="at">palette =</span> <span class="st">"-RdYlBu"</span>) <span class="sc">+</span> </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(Buffer) <span class="sc">+</span> </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">"red"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+── tmap v3 code detected ───────────────────────────────────────────────────────
+[v3-&gt;v4] `tm_tm_dots()`: migrate the argument(s) related to the scale of the
+map variable `fill` namely 'palette' (rename to 'values') to fill.scale =
+tm_scale(&lt;HERE&gt;).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap12_limpieza_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Se guarda el objeto como un archivo shapefile</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(datos_spline_sf, <span class="st">"salidas/spline.gpkg"</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Deleting layer `spline' using driver `GPKG'
+Writing layer `spline' to data source `salidas/spline.gpkg' using driver `GPKG'
+Writing 248 features with 2 fields and geometry type Point.</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="ejercicio-de-recopilación" class="level2" style="color: #122562" data-number="13.4">
+<h2 style="color: #122562" data-number="13.4" class="anchored" data-anchor-id="ejercicio-de-recopilación"><span class="header-section-number">13.4</span> Ejercicio de recopilación</h2>
+<p>Las muestras tomadas en campo son analizadas en el laboratorio y posteriormente se obtienen los resultados.</p>
+<ol type="1">
+<li>Convierta los puntos seleccionamos previamente en un dataframe.</li>
+<li>Realiza un EDA para entender un poco el comportamiento de estos datos.</li>
+<li>Seleccione la variable de su interés, la cuál utilizará para realizar el mapeo.</li>
+<li>Calcula los valores de spline si es necesario.</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./cap11_muestreo.html" class="pagination-link" aria-label="Estrategia de muestreo">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estrategia de muestreo</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./cap13_seleccion.html" class="pagination-link" aria-label="Selección de covariables">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Selección de covariables</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

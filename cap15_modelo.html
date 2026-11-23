@@ -1,0 +1,2222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>15&nbsp; Predicción espacial: Modelamiento y validación – Mapeo Digital de Suelos</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./cap16_incertidumbre.html" rel="next">
+<link href="./cap14_herramientas_geo.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9e3e5b9121e68b3f077afb32f2c64d95.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cap15_modelo.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Predicción espacial: Modelamiento y validación</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Mapeo Digital de Suelos</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Mapeo Digital de Suelos: Principios, técnicas y aplicaciones</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap1_Rstudio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">R y un poco de su historia</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap2_Manejo_basicoR.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Manejo básico de R</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap3_funciones.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Condicionales, ciclos y funciones</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap4_graficos.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Gráficos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap5_manipulacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Manipulación de datos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap6_Introduccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Introducción al Mapeo Digital de Suelos</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap7_editVecyRaster.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Procesamiento de datos espaciales- Vectoriales</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap8_rasteredit.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Procesamiento de datos espaciales- Ráster</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap9_visualizar.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Visualización de datos espaciales</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap10_coleccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Colección y armonización de covariables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap11_muestreo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Estrategia de muestreo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap12_limpieza.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Limpieza, procesamiento y análisis exploratorio de datos de campo</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap13_seleccion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Selección de covariables</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap14_herramientas_geo.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Herramientas y métodos para la predicción espacial</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap15_modelo.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Predicción espacial: Modelamiento y validación</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap16_incertidumbre.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Incretidumbre y evaluación de los mapas</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap17_aplicacion.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Toma de decisiones a partir del DSM</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#entrenamiento-y-validación-de-los-modelos" id="toc-entrenamiento-y-validación-de-los-modelos" class="nav-link active" data-scroll-target="#entrenamiento-y-validación-de-los-modelos"><span class="header-section-number">15.1</span> Entrenamiento y validación de los modelos</a></li>
+  <li><a href="#validación" id="toc-validación" class="nav-link" data-scroll-target="#validación"><span class="header-section-number">15.2</span> Validación</a></li>
+  <li><a href="#división-de-dataset" id="toc-división-de-dataset" class="nav-link" data-scroll-target="#división-de-dataset"><span class="header-section-number">15.3</span> División de dataset</a>
+  <ul class="collapse">
+  <li><a href="#split-simple" id="toc-split-simple" class="nav-link" data-scroll-target="#split-simple"><span class="header-section-number">15.3.1</span> Split simple</a></li>
+  <li><a href="#validación-cruzada---cross-validation" id="toc-validación-cruzada---cross-validation" class="nav-link" data-scroll-target="#validación-cruzada---cross-validation"><span class="header-section-number">15.3.2</span> Validación cruzada - Cross validation</a></li>
+  </ul></li>
+  <li><a href="#ajuste-de-los-modelos" id="toc-ajuste-de-los-modelos" class="nav-link" data-scroll-target="#ajuste-de-los-modelos"><span class="header-section-number">15.4</span> Ajuste de los modelos</a></li>
+  <li><a href="#modelo-seleccionado" id="toc-modelo-seleccionado" class="nav-link" data-scroll-target="#modelo-seleccionado"><span class="header-section-number">15.5</span> Modelo seleccionado</a>
+  <ul class="collapse">
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest"><span class="header-section-number">15.5.1</span> Random Forest</a></li>
+  </ul></li>
+  <li><a href="#quantile-regression-forest" id="toc-quantile-regression-forest" class="nav-link" data-scroll-target="#quantile-regression-forest"><span class="header-section-number">15.6</span> Quantile Regression Forest</a></li>
+  <li><a href="#ejercicio-final" id="toc-ejercicio-final" class="nav-link" data-scroll-target="#ejercicio-final"><span class="header-section-number">15.7</span> Ejercicio final</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Predicción espacial: Modelamiento y validación</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>El modelo seleccionado para este ejercicio es el Random Forest o bosques aleatorios, al principal ventaja de este método es su precisión de predicción. En muchos conjuntos de datos funcionan mejor, que otros algoritmos de clasificación y regresión.</p>
+<section id="entrenamiento-y-validación-de-los-modelos" class="level2" style="color: #122562" data-number="15.1">
+<h2 style="color: #122562" data-number="15.1" class="anchored" data-anchor-id="entrenamiento-y-validación-de-los-modelos"><span class="header-section-number">15.1</span> Entrenamiento y validación de los modelos</h2>
+<p>En el contexto de <strong>Machine Learning</strong>, el conjunto de <strong>entrenamiento</strong> (train) y el conjunto de <strong>prueba</strong> (test) son fundamentales para desarrollar y evaluar modelos predictivos.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fmedium.com%2F%40rahulchavan4894%2Funderstanding-train-test-and-validation-dataset-split-in-simple-quick-terms-5a8630fe58c8&amp;psig=AOvVaw25FHtPfYMFF60aBwt7_AX3&amp;ust=1717107400758000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBIQjRxqFwoTCMDyx9fxs4YDFQAAAAAdAAAAABAE"><img src="capitulos/Cap15/Images/Fk91K3PWIAE9Dda-01.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="433"></a></p>
+</figure>
+</div>
+<figcaption>Split simple</figcaption>
+</figure>
+</div>
+<ul>
+<li><p><strong>Conjunto de Entrenamiento (Train)</strong>: Es la porción de datos que se utiliza para <strong>entrenar</strong> el modelo. El modelo aprende a identificar patrones y hacer predicciones de acuerdo a la información proporcionada.</p></li>
+<li><p><strong>Conjunto de Prueba (Test)</strong>: Es la porción de datos que se encarga de <strong>evaluar</strong> la eficiencia del modelo. Estos datos no se utilizan durante el entrenamiento y sirven para probar cómo el modelo puede generar nuevos datos.</p></li>
+</ul>
+<p>Lo que se busca es que el modelo pueda predecir correctamente los resultados en datos desconocidos, esto indica su capacidad de generalización. Si el modelo presenta un rendimiento similar en ambos conjuntos, es probable que funcione bien con datos nuevos.</p>
+<p>Sin embargo, si hay una gran discrepancia entre el rendimiento en el conjunto de entrenamiento y el de prueba, podría indicar un problema, como el sobreajuste (overfitting), donde el modelo aprende demasiado los detalles del conjunto de entrenamiento y pierde capacidad de generalizar.</p>
+</section>
+<section id="validación" class="level2" style="color: #122562" data-number="15.2">
+<h2 style="color: #122562" data-number="15.2" class="anchored" data-anchor-id="validación"><span class="header-section-number">15.2</span> Validación</h2>
+<p>La validación evalúa qué tan bien el modelo realizará predicciones con datos nuevos, es decir, datos que no se utilizaron durante el entrenamiento del modelo. Es importante para asegurar que el modelo sea generalizable y funcione bien con datos que no ha visto antes.</p>
+</section>
+<section id="división-de-dataset" class="level2" style="color: #122562" data-number="15.3">
+<h2 style="color: #122562" data-number="15.3" class="anchored" data-anchor-id="división-de-dataset"><span class="header-section-number">15.3</span> División de dataset</h2>
+<p>Se describirán algunas de las técnicas utilizadas para realizar las divisiones de donde se obtendrán las técnicas para validar el modelo:</p>
+<section id="split-simple" class="level3" style="color: #122562" data-number="15.3.1">
+<h3 style="color: #122562" data-number="15.3.1" class="anchored" data-anchor-id="split-simple"><span class="header-section-number">15.3.1</span> Split simple</h3>
+<p>Esta técnica es comúnmente usada para dividir el conjunto de datos en dos subconjuntos: un conjunto de entrenamiento y un conjunto de prueba. Este proceso de división se realiza aleatoriamente, asegurando que ambos conjuntos representen la distribución general de los datos. La proporción común para la división es 80% para el conjunto de entrenamiento y 20% para el conjunto de prueba.</p>
+<p>El Split simple se caracteriza por ser simple, eficiente y fácil de interpretar que proporciona una valiosa evaluación del modelo. Además, es un método computacionalmente eficiente que no requiere dividir el conjunto de datos en múltiples subconjuntos.</p>
+<p>Cortarla a solo la parte de arriba</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.google.com/imgres?q=train%20test%20and%20validation%20set&amp;imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fcommons%2Fb%2Fbb%2FML_dataset_training_validation_test_sets.png&amp;imgrefurl=https%3A%2F%2Fcommons.wikimedia.org%2Fwiki%2FFile%3AML_dataset_training_validation_test_sets.png&amp;docid=QvKXmCdvn1VsUM&amp;tbnid=hdf1m-snhXAfGM&amp;vet=12ahUKEwipr_7V8bOGAxWGkIQIHYcIC98QM3oECE8QAA..i&amp;w=1280&amp;h=558&amp;hcb=2&amp;ved=2ahUKEwipr_7V8bOGAxWGkIQIHYcIC98QM3oECE8QAA"><img src="capitulos/Cap15/Images/ML_dataset_training_validation_test_sets.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="548"></a></p>
+</figure>
+</div>
+<figcaption>División del dataset con split simple</figcaption>
+</figure>
+</div>
+</section>
+<section id="validación-cruzada---cross-validation" class="level3" style="color: #122562" data-number="15.3.2">
+<h3 style="color: #122562" data-number="15.3.2" class="anchored" data-anchor-id="validación-cruzada---cross-validation"><span class="header-section-number">15.3.2</span> Validación cruzada - Cross validation</h3>
+<p>La validación cruzada (CV) es una técnica comúnmente utilizada para evaluar el rendimiento de un modelo y su capacidad para generalizar a datos invisibles. Implica dividir los datos disponibles en múltiples pliegues o subconjuntos, utilizar uno de estos pliegues como conjunto de validación y entrenar el modelo en los pliegues restantes. Este proceso se repite varias veces y cada pliegue sirve como conjunto de prueba exactamente una vez.</p>
+<p>Dentro de las ventajas de la validación cruzada, se puede decir que evita el sobreajuste al usar datos invisibles para la evaluación. Y puede brindar una guía para la selección de los hiperparámetros óptimos del modelo.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.sharpsightlabs.com%2Fblog%2Fcross-validation-explained%2F&amp;psig=AOvVaw06_n3u-Cc2BbBBGCFiqyvx&amp;ust=1717107633393000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBIQjRxqFwoTCLipo8jys4YDFQAAAAAdAAAAABBP"><img src="capitulos/Cap15/Images/5-fold-cross-validation_SIMPLE-EXAMPLE_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="515"></a></p>
+</figure>
+</div>
+<figcaption>Cross validation in models</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="ajuste-de-los-modelos" class="level2" style="color: #122562" data-number="15.4">
+<h2 style="color: #122562" data-number="15.4" class="anchored" data-anchor-id="ajuste-de-los-modelos"><span class="header-section-number">15.4</span> Ajuste de los modelos</h2>
+<p>El ajuste de modelos o tuning de hiperparámetros, es un proceso crucial para optimizar el rendimiento de un modelo entrenado. En donde se ajustan los valores de los hiperparámetros, que son configuraciones que controlan el comportamiento del algoritmo de aprendizaje.</p>
+<p>El objetivo es encontrar la combinación de hiperparámetros que maximice la capacidad del modelo para generalizar bien a los nuevos datos no vistos durante el entrenamiento, para lograr un mejor rendimiento y generalización.</p>
+<p>Los hiperparámetros son parámetros que son independientes del proceso de entrenamiento: el científico de datos los establece de antemano. Por ejemplo, en un bosque aleatorio, un hiperparámetro sería cuántos árboles incluir o cuántos nodos puede tener cada árbol. Los parámetros serían los criterios para cada nodo, que encuentra el proceso de entrenamiento para el bosque aleatorio.&nbsp;</p>
+<p><strong>Búsqueda de cuadrícula y búsqueda aleatoria</strong></p>
+<p>La búsqueda de cuadrícula es donde se selecciona&nbsp;<em>x</em>&nbsp;número de valores que están espaciados uniformemente a lo largo de cada eje. Esto forma una cuadrícula, de ahí el nombre. La búsqueda aleatoria es cuando&nbsp;se selecciona aleatoriamente un número de valores&nbsp;<em>x cuadrado</em>&nbsp;. Ambos casos generan&nbsp;un número de puntos&nbsp;<em>x cuadrado</em>&nbsp;.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="capitulos/Cap15/Images/1_Xq9OvMKXhrF3W2RBJCWW7w-01.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="499"></p>
+</figure>
+</div>
+</section>
+<section id="modelo-seleccionado" class="level2" style="color: #122562" data-number="15.5">
+<h2 style="color: #122562" data-number="15.5" class="anchored" data-anchor-id="modelo-seleccionado"><span class="header-section-number">15.5</span> Modelo seleccionado</h2>
+<section id="random-forest" class="level3" data-number="15.5.1">
+<h3 data-number="15.5.1" class="anchored" data-anchor-id="random-forest"><span class="header-section-number">15.5.1</span> Random Forest</h3>
+<p>Se realiza el modeloRandom Forest con cross validation para los 3 sets de datos que se seleccionaron previamente:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Librerías
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerias</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(randomForest)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>randomForest 4.7-1.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Type rfNews() to see new features/changes/bug fixes.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ggplot2'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:randomForest':
+
+    margin</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'caret'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    lift</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:randomForest':
+
+    combine</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.13.0, GDAL 3.10.1, PROJ 9.5.1; sf_use_s2() is TRUE</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SuperLearner)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: gam</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: splines</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: foreach</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'foreach'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:purrr':
+
+    accumulate, when</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loaded gam 1.22-7</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: nnls</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Super Learner</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Version: 2.0-42</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Package created on 2026-09-14</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(arm)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: Matrix</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lme4</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+arm (Version 1.15-4, built: 2026-11-07)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Working directory is C:/Users/CTIRADO/Documents/libro-dsm</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Random forest con todas las covariables del estudio
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargar la base de datos </span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>data<span class="ot">=</span><span class="fu">data.frame</span>(data_sf)[<span class="dv">1</span><span class="sc">:</span><span class="dv">26</span>]</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)  <span class="co"># Seleccionar la semilla de la división</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(data<span class="sc">$</span>X0_30_c , <span class="at">p=</span><span class="fl">0.7</span>, <span class="at">list=</span><span class="cn">FALSE</span>) </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Se divide el set de datos en entrenamiento basados en el index obtenido</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> data[train_index, ]</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train_index, ]</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) </span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Definir el control que se tiene para el test </span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>train_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"cv"</span>,            <span class="co"># Cross-validation</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">10</span>,                <span class="co"># Numero de folders</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">verboseIter =</span> <span class="cn">TRUE</span>,       <span class="co"># Progreso</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">allowParallel =</span> <span class="cn">TRUE</span>      <span class="co"># Permitir paralelización</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Definir parámetro grid</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>param_grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),    <span class="co"># Valores mtry ejemplo</span></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntree =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">150</span>)   <span class="co"># Valores para arboles</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) </span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Entrenamiento con parametros del grid</span></span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>rf_model_grid_tun <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train,            <span class="co"># El dataset</span></span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  X0_30_cm <span class="sc">~</span> .,                   <span class="co"># Predictor</span></span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"rf"</span>,               <span class="co"># Random Forest </span></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> train_control,   <span class="co"># Training control con grid</span></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">search =</span> param_grid,</span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+ Fold01: mtry= 2 
+- Fold01: mtry= 2 
++ Fold01: mtry=13 
+- Fold01: mtry=13 
++ Fold01: mtry=25 
+- Fold01: mtry=25 
++ Fold02: mtry= 2 
+- Fold02: mtry= 2 
++ Fold02: mtry=13 
+- Fold02: mtry=13 
++ Fold02: mtry=25 
+- Fold02: mtry=25 
++ Fold03: mtry= 2 
+- Fold03: mtry= 2 
++ Fold03: mtry=13 
+- Fold03: mtry=13 
++ Fold03: mtry=25 
+- Fold03: mtry=25 
++ Fold04: mtry= 2 
+- Fold04: mtry= 2 
++ Fold04: mtry=13 
+- Fold04: mtry=13 
++ Fold04: mtry=25 
+- Fold04: mtry=25 
++ Fold05: mtry= 2 
+- Fold05: mtry= 2 
++ Fold05: mtry=13 
+- Fold05: mtry=13 
++ Fold05: mtry=25 
+- Fold05: mtry=25 
++ Fold06: mtry= 2 
+- Fold06: mtry= 2 
++ Fold06: mtry=13 
+- Fold06: mtry=13 
++ Fold06: mtry=25 
+- Fold06: mtry=25 
++ Fold07: mtry= 2 
+- Fold07: mtry= 2 
++ Fold07: mtry=13 
+- Fold07: mtry=13 
++ Fold07: mtry=25 
+- Fold07: mtry=25 
++ Fold08: mtry= 2 
+- Fold08: mtry= 2 
++ Fold08: mtry=13 
+- Fold08: mtry=13 
++ Fold08: mtry=25 
+- Fold08: mtry=25 
++ Fold09: mtry= 2 
+- Fold09: mtry= 2 
++ Fold09: mtry=13 
+- Fold09: mtry=13 
++ Fold09: mtry=25 
+- Fold09: mtry=25 
++ Fold10: mtry= 2 
+- Fold10: mtry= 2 
++ Fold10: mtry=13 
+- Fold10: mtry=13 
++ Fold10: mtry=25 
+- Fold10: mtry=25 
+Aggregating results
+Selecting tuning parameters
+Fitting mtry = 25 on full training set</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Entrenamiento con parametros random</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>rf_model_random_tun <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train,            <span class="co"># Dataset</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  X0_30_cm <span class="sc">~</span> .,                   <span class="co"># Predictor</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"rf"</span>,               <span class="co"># Random Forest </span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> train_control,   <span class="co"># Training control con random</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">search =</span> <span class="st">"random"</span>,</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneLength =</span> <span class="dv">10</span>   </span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+ Fold01: mtry= 2 
+- Fold01: mtry= 2 
++ Fold01: mtry= 4 
+- Fold01: mtry= 4 
++ Fold01: mtry= 7 
+- Fold01: mtry= 7 
++ Fold01: mtry= 9 
+- Fold01: mtry= 9 
++ Fold01: mtry=12 
+- Fold01: mtry=12 
++ Fold01: mtry=14 
+- Fold01: mtry=14 
++ Fold01: mtry=17 
+- Fold01: mtry=17 
++ Fold01: mtry=19 
+- Fold01: mtry=19 
++ Fold01: mtry=22 
+- Fold01: mtry=22 
++ Fold01: mtry=25 
+- Fold01: mtry=25 
++ Fold02: mtry= 2 
+- Fold02: mtry= 2 
++ Fold02: mtry= 4 
+- Fold02: mtry= 4 
++ Fold02: mtry= 7 
+- Fold02: mtry= 7 
++ Fold02: mtry= 9 
+- Fold02: mtry= 9 
++ Fold02: mtry=12 
+- Fold02: mtry=12 
++ Fold02: mtry=14 
+- Fold02: mtry=14 
++ Fold02: mtry=17 
+- Fold02: mtry=17 
++ Fold02: mtry=19 
+- Fold02: mtry=19 
++ Fold02: mtry=22 
+- Fold02: mtry=22 
++ Fold02: mtry=25 
+- Fold02: mtry=25 
++ Fold03: mtry= 2 
+- Fold03: mtry= 2 
++ Fold03: mtry= 4 
+- Fold03: mtry= 4 
++ Fold03: mtry= 7 
+- Fold03: mtry= 7 
++ Fold03: mtry= 9 
+- Fold03: mtry= 9 
++ Fold03: mtry=12 
+- Fold03: mtry=12 
++ Fold03: mtry=14 
+- Fold03: mtry=14 
++ Fold03: mtry=17 
+- Fold03: mtry=17 
++ Fold03: mtry=19 
+- Fold03: mtry=19 
++ Fold03: mtry=22 
+- Fold03: mtry=22 
++ Fold03: mtry=25 
+- Fold03: mtry=25 
++ Fold04: mtry= 2 
+- Fold04: mtry= 2 
++ Fold04: mtry= 4 
+- Fold04: mtry= 4 
++ Fold04: mtry= 7 
+- Fold04: mtry= 7 
++ Fold04: mtry= 9 
+- Fold04: mtry= 9 
++ Fold04: mtry=12 
+- Fold04: mtry=12 
++ Fold04: mtry=14 
+- Fold04: mtry=14 
++ Fold04: mtry=17 
+- Fold04: mtry=17 
++ Fold04: mtry=19 
+- Fold04: mtry=19 
++ Fold04: mtry=22 
+- Fold04: mtry=22 
++ Fold04: mtry=25 
+- Fold04: mtry=25 
++ Fold05: mtry= 2 
+- Fold05: mtry= 2 
++ Fold05: mtry= 4 
+- Fold05: mtry= 4 
++ Fold05: mtry= 7 
+- Fold05: mtry= 7 
++ Fold05: mtry= 9 
+- Fold05: mtry= 9 
++ Fold05: mtry=12 
+- Fold05: mtry=12 
++ Fold05: mtry=14 
+- Fold05: mtry=14 
++ Fold05: mtry=17 
+- Fold05: mtry=17 
++ Fold05: mtry=19 
+- Fold05: mtry=19 
++ Fold05: mtry=22 
+- Fold05: mtry=22 
++ Fold05: mtry=25 
+- Fold05: mtry=25 
++ Fold06: mtry= 2 
+- Fold06: mtry= 2 
++ Fold06: mtry= 4 
+- Fold06: mtry= 4 
++ Fold06: mtry= 7 
+- Fold06: mtry= 7 
++ Fold06: mtry= 9 
+- Fold06: mtry= 9 
++ Fold06: mtry=12 
+- Fold06: mtry=12 
++ Fold06: mtry=14 
+- Fold06: mtry=14 
++ Fold06: mtry=17 
+- Fold06: mtry=17 
++ Fold06: mtry=19 
+- Fold06: mtry=19 
++ Fold06: mtry=22 
+- Fold06: mtry=22 
++ Fold06: mtry=25 
+- Fold06: mtry=25 
++ Fold07: mtry= 2 
+- Fold07: mtry= 2 
++ Fold07: mtry= 4 
+- Fold07: mtry= 4 
++ Fold07: mtry= 7 
+- Fold07: mtry= 7 
++ Fold07: mtry= 9 
+- Fold07: mtry= 9 
++ Fold07: mtry=12 
+- Fold07: mtry=12 
++ Fold07: mtry=14 
+- Fold07: mtry=14 
++ Fold07: mtry=17 
+- Fold07: mtry=17 
++ Fold07: mtry=19 
+- Fold07: mtry=19 
++ Fold07: mtry=22 
+- Fold07: mtry=22 
++ Fold07: mtry=25 
+- Fold07: mtry=25 
++ Fold08: mtry= 2 
+- Fold08: mtry= 2 
++ Fold08: mtry= 4 
+- Fold08: mtry= 4 
++ Fold08: mtry= 7 
+- Fold08: mtry= 7 
++ Fold08: mtry= 9 
+- Fold08: mtry= 9 
++ Fold08: mtry=12 
+- Fold08: mtry=12 
++ Fold08: mtry=14 
+- Fold08: mtry=14 
++ Fold08: mtry=17 
+- Fold08: mtry=17 
++ Fold08: mtry=19 
+- Fold08: mtry=19 
++ Fold08: mtry=22 
+- Fold08: mtry=22 
++ Fold08: mtry=25 
+- Fold08: mtry=25 
++ Fold09: mtry= 2 
+- Fold09: mtry= 2 
++ Fold09: mtry= 4 
+- Fold09: mtry= 4 
++ Fold09: mtry= 7 
+- Fold09: mtry= 7 
++ Fold09: mtry= 9 
+- Fold09: mtry= 9 
++ Fold09: mtry=12 
+- Fold09: mtry=12 
++ Fold09: mtry=14 
+- Fold09: mtry=14 
++ Fold09: mtry=17 
+- Fold09: mtry=17 
++ Fold09: mtry=19 
+- Fold09: mtry=19 
++ Fold09: mtry=22 
+- Fold09: mtry=22 
++ Fold09: mtry=25 
+- Fold09: mtry=25 
++ Fold10: mtry= 2 
+- Fold10: mtry= 2 
++ Fold10: mtry= 4 
+- Fold10: mtry= 4 
++ Fold10: mtry= 7 
+- Fold10: mtry= 7 
++ Fold10: mtry= 9 
+- Fold10: mtry= 9 
++ Fold10: mtry=12 
+- Fold10: mtry=12 
++ Fold10: mtry=14 
+- Fold10: mtry=14 
++ Fold10: mtry=17 
+- Fold10: mtry=17 
++ Fold10: mtry=19 
+- Fold10: mtry=19 
++ Fold10: mtry=22 
+- Fold10: mtry=22 
++ Fold10: mtry=25 
+- Fold10: mtry=25 
+Aggregating results
+Selecting tuning parameters
+Fitting mtry = 25 on full training set</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtener el mejor modelo RF</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model_grid_tun)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest 
+
+176 samples
+ 25 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 157, 159, 158, 158, 159, 157, ... 
+Resampling results across tuning parameters:
+
+  mtry  RMSE      Rsquared   MAE     
+   2    26.17825  0.5449614  20.90940
+  13    24.68561  0.5859316  19.03582
+  25    23.93196  0.6109011  18.36027
+
+RMSE was used to select the optimal model using the smallest value.
+The final value used for the model was mtry = 25.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model_random_tun)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest 
+
+176 samples
+ 25 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 157, 159, 158, 158, 159, 157, ... 
+Resampling results across tuning parameters:
+
+  mtry  RMSE      Rsquared   MAE     
+   2    26.20828  0.5439628  20.93545
+   4    25.74767  0.5513944  20.37924
+   7    25.30727  0.5672027  19.70000
+   9    25.00256  0.5720505  19.36839
+  12    24.73576  0.5829924  18.98297
+  14    24.54567  0.5875235  18.90215
+  17    24.31964  0.5986163  18.66429
+  19    24.23717  0.5988939  18.51369
+  22    24.18911  0.6010704  18.46498
+  25    24.13237  0.6044828  18.47850
+
+RMSE was used to select the optimal model using the smallest value.
+The final value used for the model was mtry = 25.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Se definen lo mejores modelos obtenidos con cada tuning </span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>best_rf_grid_tun <span class="ot">&lt;-</span> rf_model_grid_tun<span class="sc">$</span>finalModel</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>best_rf_grid_tun</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(x = x, y = y, mtry = param$mtry, search = ..1) 
+               Type of random forest: regression
+                     Number of trees: 500
+No. of variables tried at each split: 25
+
+          Mean of squared residuals: 559.3724
+                    % Var explained: 58.17</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>best_rf_random_tun <span class="ot">&lt;-</span> rf_model_random_tun<span class="sc">$</span>finalModel</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>best_rf_random_tun</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(x = x, y = y, mtry = param$mtry, search = "random") 
+               Type of random forest: regression
+                     Number of trees: 500
+No. of variables tried at each split: 25
+
+          Mean of squared residuals: 553.996
+                    % Var explained: 58.57</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Random forest con las covariables seleccionadas mediante VSURF
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargar la base de datos </span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>data<span class="ot">=</span> data[data_VSURF]</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)  <span class="co"># Seleccionar la semilla de la división</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(data<span class="sc">$</span>X0_30_cm , <span class="at">p=</span><span class="fl">0.7</span>, <span class="at">list=</span><span class="cn">FALSE</span>) </span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Se divide el set de datos en entrenamiento basados en el index obtenido</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> data[train_index, ]</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> data[<span class="sc">-</span>train_index, ]</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) </span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Definir el control que se tiene para el test </span></span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>train_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"cv"</span>,            <span class="co"># Cross-validation</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">10</span>,                <span class="co"># Numero de folders para CV</span></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">verboseIter =</span> <span class="cn">TRUE</span>,       <span class="co"># Imprimir proceso</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">allowParallel =</span> <span class="cn">TRUE</span>      <span class="co"># Permitir paralelización</span></span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Definir parámetro grid</span></span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a>param_grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>),    <span class="co"># Valores seleccionados para mtry</span></span>
+<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">ntree =</span> <span class="fu">c</span>(<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">150</span>)   <span class="co"># Valores seleccionados para numero de árboles</span></span>
+<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) </span>
+<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Entrenamiento con parametros del grid</span></span>
+<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a>rf_model_grid_tun_VSURF <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(</span>
+<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train,              <span class="co"># Dataset</span></span>
+<span id="cb49-34"><a href="#cb49-34" aria-hidden="true" tabindex="-1"></a>  X0_30_cm <span class="sc">~</span> .,                   <span class="co"># Variable predictora</span></span>
+<span id="cb49-35"><a href="#cb49-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"rf"</span>,               <span class="co"># Random Forest </span></span>
+<span id="cb49-36"><a href="#cb49-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> train_control,   <span class="co"># Control de entrenamiento con grid</span></span>
+<span id="cb49-37"><a href="#cb49-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">search =</span> param_grid,</span>
+<span id="cb49-38"><a href="#cb49-38" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>+ Fold01: mtry=2 
+- Fold01: mtry=2 
++ Fold01: mtry=4 
+- Fold01: mtry=4 
++ Fold01: mtry=6 
+- Fold01: mtry=6 
++ Fold02: mtry=2 
+- Fold02: mtry=2 
++ Fold02: mtry=4 
+- Fold02: mtry=4 
++ Fold02: mtry=6 
+- Fold02: mtry=6 
++ Fold03: mtry=2 
+- Fold03: mtry=2 
++ Fold03: mtry=4 
+- Fold03: mtry=4 
++ Fold03: mtry=6 
+- Fold03: mtry=6 
++ Fold04: mtry=2 
+- Fold04: mtry=2 
++ Fold04: mtry=4 
+- Fold04: mtry=4 
++ Fold04: mtry=6 
+- Fold04: mtry=6 
++ Fold05: mtry=2 
+- Fold05: mtry=2 
++ Fold05: mtry=4 
+- Fold05: mtry=4 
++ Fold05: mtry=6 
+- Fold05: mtry=6 
++ Fold06: mtry=2 
+- Fold06: mtry=2 
++ Fold06: mtry=4 
+- Fold06: mtry=4 
++ Fold06: mtry=6 
+- Fold06: mtry=6 
++ Fold07: mtry=2 
+- Fold07: mtry=2 
++ Fold07: mtry=4 
+- Fold07: mtry=4 
++ Fold07: mtry=6 
+- Fold07: mtry=6 
++ Fold08: mtry=2 
+- Fold08: mtry=2 
++ Fold08: mtry=4 
+- Fold08: mtry=4 
++ Fold08: mtry=6 
+- Fold08: mtry=6 
++ Fold09: mtry=2 
+- Fold09: mtry=2 
++ Fold09: mtry=4 
+- Fold09: mtry=4 
++ Fold09: mtry=6 
+- Fold09: mtry=6 
++ Fold10: mtry=2 
+- Fold10: mtry=2 
++ Fold10: mtry=4 
+- Fold10: mtry=4 
++ Fold10: mtry=6 
+- Fold10: mtry=6 
+Aggregating results
+Selecting tuning parameters
+Fitting mtry = 2 on full training set</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>) </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Entrenamiento con parametros random</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>rf_model_random_tun_VSURF <span class="ot">&lt;-</span> caret<span class="sc">::</span><span class="fu">train</span>(</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train,            <span class="co"># Dataset</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  X0_30_cm <span class="sc">~</span> .,                   <span class="co"># Variable predictora</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"rf"</span>,               <span class="co"># Random Forest </span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> train_control,   <span class="co"># Control de entrenamiento con random</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">search =</span> <span class="st">"random"</span>,</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tuneLength =</span> <span class="dv">10</span>       </span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>note: only 5 unique complexity parameters in default grid. Truncating the grid to 5 .
+
++ Fold01: mtry=2 
+- Fold01: mtry=2 
++ Fold01: mtry=3 
+- Fold01: mtry=3 
++ Fold01: mtry=4 
+- Fold01: mtry=4 
++ Fold01: mtry=5 
+- Fold01: mtry=5 
++ Fold01: mtry=6 
+- Fold01: mtry=6 
++ Fold02: mtry=2 
+- Fold02: mtry=2 
++ Fold02: mtry=3 
+- Fold02: mtry=3 
++ Fold02: mtry=4 
+- Fold02: mtry=4 
++ Fold02: mtry=5 
+- Fold02: mtry=5 
++ Fold02: mtry=6 
+- Fold02: mtry=6 
++ Fold03: mtry=2 
+- Fold03: mtry=2 
++ Fold03: mtry=3 
+- Fold03: mtry=3 
++ Fold03: mtry=4 
+- Fold03: mtry=4 
++ Fold03: mtry=5 
+- Fold03: mtry=5 
++ Fold03: mtry=6 
+- Fold03: mtry=6 
++ Fold04: mtry=2 
+- Fold04: mtry=2 
++ Fold04: mtry=3 
+- Fold04: mtry=3 
++ Fold04: mtry=4 
+- Fold04: mtry=4 
++ Fold04: mtry=5 
+- Fold04: mtry=5 
++ Fold04: mtry=6 
+- Fold04: mtry=6 
++ Fold05: mtry=2 
+- Fold05: mtry=2 
++ Fold05: mtry=3 
+- Fold05: mtry=3 
++ Fold05: mtry=4 
+- Fold05: mtry=4 
++ Fold05: mtry=5 
+- Fold05: mtry=5 
++ Fold05: mtry=6 
+- Fold05: mtry=6 
++ Fold06: mtry=2 
+- Fold06: mtry=2 
++ Fold06: mtry=3 
+- Fold06: mtry=3 
++ Fold06: mtry=4 
+- Fold06: mtry=4 
++ Fold06: mtry=5 
+- Fold06: mtry=5 
++ Fold06: mtry=6 
+- Fold06: mtry=6 
++ Fold07: mtry=2 
+- Fold07: mtry=2 
++ Fold07: mtry=3 
+- Fold07: mtry=3 
++ Fold07: mtry=4 
+- Fold07: mtry=4 
++ Fold07: mtry=5 
+- Fold07: mtry=5 
++ Fold07: mtry=6 
+- Fold07: mtry=6 
++ Fold08: mtry=2 
+- Fold08: mtry=2 
++ Fold08: mtry=3 
+- Fold08: mtry=3 
++ Fold08: mtry=4 
+- Fold08: mtry=4 
++ Fold08: mtry=5 
+- Fold08: mtry=5 
++ Fold08: mtry=6 
+- Fold08: mtry=6 
++ Fold09: mtry=2 
+- Fold09: mtry=2 
++ Fold09: mtry=3 
+- Fold09: mtry=3 
++ Fold09: mtry=4 
+- Fold09: mtry=4 
++ Fold09: mtry=5 
+- Fold09: mtry=5 
++ Fold09: mtry=6 
+- Fold09: mtry=6 
++ Fold10: mtry=2 
+- Fold10: mtry=2 
++ Fold10: mtry=3 
+- Fold10: mtry=3 
++ Fold10: mtry=4 
+- Fold10: mtry=4 
++ Fold10: mtry=5 
+- Fold10: mtry=5 
++ Fold10: mtry=6 
+- Fold10: mtry=6 
+Aggregating results
+Selecting tuning parameters
+Fitting mtry = 2 on full training set</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtener el mejor modelo RF</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model_grid_tun_VSURF)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest 
+
+176 samples
+  6 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 157, 159, 158, 158, 159, 157, ... 
+Resampling results across tuning parameters:
+
+  mtry  RMSE      Rsquared   MAE     
+  2     29.94161  0.3521165  24.64462
+  4     30.21423  0.3356487  24.74505
+  6     30.50577  0.3251184  24.87548
+
+RMSE was used to select the optimal model using the smallest value.
+The final value used for the model was mtry = 2.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model_random_tun_VSURF)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest 
+
+176 samples
+  6 predictor
+
+No pre-processing
+Resampling: Cross-Validated (10 fold) 
+Summary of sample sizes: 157, 159, 158, 158, 159, 157, ... 
+Resampling results across tuning parameters:
+
+  mtry  RMSE      Rsquared   MAE     
+  2     29.77279  0.3580875  24.44176
+  3     29.98919  0.3458758  24.64429
+  4     30.27384  0.3337357  24.80372
+  5     30.58077  0.3210423  25.03677
+  6     30.68349  0.3183775  24.95133
+
+RMSE was used to select the optimal model using the smallest value.
+The final value used for the model was mtry = 2.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Se definen lo mejores modelos obtenidos con cada tuning </span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>best_rf_grid_tun_VSURF <span class="ot">&lt;-</span> rf_model_grid_tun_VSURF<span class="sc">$</span>finalModel</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>best_rf_grid_tun_VSURF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(x = x, y = y, mtry = param$mtry, search = ..1) 
+               Type of random forest: regression
+                     Number of trees: 500
+No. of variables tried at each split: 2
+
+          Mean of squared residuals: 891.7648
+                    % Var explained: 33.31</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>best_rf_random_tun_VSURF <span class="ot">&lt;-</span> rf_model_random_tun_VSURF<span class="sc">$</span>finalModel</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>best_rf_random_tun_VSURF</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+ randomForest(x = x, y = y, mtry = param$mtry, search = "random") 
+               Type of random forest: regression
+                     Number of trees: 500
+No. of variables tried at each split: 2
+
+          Mean of squared residuals: 907.7233
+                    % Var explained: 32.12</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-empty-content callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Random Forest con las covariables seleccionadas mediante VIF
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Validación del modelo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Se prueba el modelo con un set de datos que no conce, estos datos fueron separados inicialmente. Y el modelo es aquel seleccionado anteriormente:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Se obtiene la importancia de las variables</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>var_imp <span class="ot">&lt;-</span> <span class="fu">varImp</span>(best_rf_random_tun_VIF, <span class="at">scale=</span><span class="cn">FALSE</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>var_imp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">variables=</span><span class="fu">row.names</span>(var_imp), <span class="at">importance=</span>var_imp<span class="sc">$</span>Overall)</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Se grafican para entender cúal está influyendo más en el modelo</span></span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>var_imp <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(importance) <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span><span class="fu">reorder</span>(variables, importance), <span class="at">y=</span>importance)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">'identity'</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">'Variables'</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">'Random forest variable importance'</span>) <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>), </span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>              <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>), </span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>),)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap15_modelo_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Evaluar el desempeno del modelo con el set de entrenamiento </span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Los datos en formato ráster servirán para que la predicción ahora no sea numérica sino en formato ráster</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>lista_raster<span class="ot">=</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"datos/covariables"</span>, <span class="at">pattern =</span> <span class="st">".tif"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>raster_stack<span class="ot">=</span> <span class="fu">stack</span>(lista_raster)</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Se predice utiliando el RF elegido y el stack de los raster</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>X0_30_cm_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(<span class="at">object =</span> raster_stack[[data_VIF]], <span class="at">model =</span> best_rf_random_tun_VIF)<span class="sc">*</span><span class="dv">1</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="co">#Se visualiza la predicción realizada</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(X0_30_cm_pred)</span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(train[<span class="st">"X0_30_cm"</span>], <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap15_modelo_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Se extraen los puntos donde los datos de entrenamiento y de prueba se cruzan en el mapa predicho</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>train_extract <span class="ot">=</span> raster<span class="sc">::</span><span class="fu">extract</span>(<span class="at">x =</span> X0_30_cm_pred, <span class="at">y =</span> train_sf)</span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>test_extract <span class="ot">=</span> raster<span class="sc">::</span><span class="fu">extract</span>(<span class="at">x =</span> X0_30_cm_pred, <span class="at">y =</span> test_sf)</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Se tabulan los valores predichos y los valores de materia orgánica reales que se dividieron en el set de entrenamiento y prueba</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>val_train_data <span class="ot">=</span> <span class="fu">cbind</span>(train[<span class="st">"X0_30_cm"</span>], <span class="at">predicho =</span> train_extract)</span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>val_test_data <span class="ot">=</span> <span class="fu">cbind</span>(test[<span class="st">"X0_30_cm"</span>], <span class="at">predicho =</span> test_extract)</span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Se obtienen las métricas de validación para el set de entrenamiento</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>train.R2 <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">R2</span>(train<span class="sc">$</span>X0_30_cm, train_extract),<span class="dv">3</span>)</span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>train.RMSE <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">RMSE</span>(train<span class="sc">$</span>X0_30_cm, train_extract))</span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>train.MAE <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">MAE</span>(train<span class="sc">$</span>X0_30_cm, train_extract))</span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Se obtienen las métricas de validación para el set de prueba</span></span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a>test.R2 <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">R2</span>(test<span class="sc">$</span>X0_30_cm, test_extract),<span class="dv">3</span>)</span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a>test.RMSE <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">RMSE</span>(test<span class="sc">$</span>X0_30_cm, test_extract))</span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a>test.MAE <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">MAE</span>(test<span class="sc">$</span>X0_30_cm, test_extract))</span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a><span class="co">#Se visualizan las métricas</span></span>
+<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a>Train_metrics <span class="ot">=</span> <span class="fu">c</span>(<span class="at">R2 =</span> train.R2, <span class="at">RMSE =</span> train.RMSE, <span class="at">MAE =</span> train.MAE) <span class="co"># R2, RMSE, MAE</span></span>
+<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a>Test_metrics <span class="ot">=</span> <span class="fu">c</span>(<span class="at">R2 =</span> test.R2, <span class="at">RMSE =</span> test.RMSE, <span class="at">MAE =</span> test.MAE) <span class="co"># R2, RMSE, MAE</span></span>
+<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a>Train_metrics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    R2   RMSE    MAE 
+ 0.933 10.000  8.000 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>Test_metrics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    R2   RMSE    MAE 
+ 0.434 32.000 23.000 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear un ggplot comparanda los valores predichos con los datos de entrenamiento y prueba</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>()<span class="sc">+</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> train<span class="sc">$</span>X0_30_cm, <span class="at">y =</span> train_extract, <span class="at">color =</span> <span class="st">"green"</span>), <span class="at">data =</span>train) <span class="sc">+</span></span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> test<span class="sc">$</span>X0_30_cm, <span class="at">y =</span> test_extract, <span class="at">color =</span> <span class="st">"red"</span>), <span class="at">data =</span> test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap15_modelo_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="quantile-regression-forest" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="quantile-regression-forest"><span class="header-section-number">15.6</span> Quantile Regression Forest</h2>
+<p>El Quantile Regression Forest (QRF) es una extensión del algoritmo Random Forest que no solo predice un valor promedio (como lo hace un Random Forest tradicional), sino que además permite estimar la distribución completa de la variable respuesta. Esto quiere decir que QRF puede calcular cuantiles (por ejemplo, el 5%, 50% o 95%), proporcionando información sobre incertidumbre, rangos de valores posibles y extremos.</p>
+<p>A diferencia del Random Forest clásico, que entrega una única predicción basada en los promedios de los árboles, el QRF conserva todas las observaciones de las hojas terminales donde caen los datos, lo que permite reconstruir una distribución empírica para cada predicción.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Librerías
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Librerías necesarias</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ranger)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ranger' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'ranger'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:randomForest':
+
+    importance</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyr' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'tidyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:raster':
+
+    extract</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:Matrix':
+
+    expand, pack, unpack</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Sets de entrenamiento y prueba</p>
+<p>Para realizar entrenar y testear el modelo, debe definir que cantidad de datos utilizará para entrenar su modelo y seleccionarlos.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definir sets
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Para entrenar / testear usaremos el set VIF (ajusta si quieres VSURF u otro)</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">data.frame</span>(data_sf)[ , data_VIF]</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="co"># quitar filas con NA en predictora o covariables</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> data <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Partición de datos</span></span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(data<span class="sc">$</span>X0_30_cm, <span class="at">p =</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> data[train_index, ]</span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>test  <span class="ot">&lt;-</span> data[<span class="sc">-</span>train_index, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>Luego se definen los parámetros del modelo, aquí se puede definir los parámetros mtry, ntree y min.node.size:</p>
+<p>mtry Es el número de variables predictor que el modelo selecciona aleatoriamente en cada división del árbol. Este parámetro controla la diversidad entre los árboles del bosque. Valores pequeños generan árboles más distintos entre sí, mientras que valores más grandes producen árboles más similares y con mayor ajuste, aunque con riesgo de sobreajuste.</p>
+<p>Se mueve entre 1 y el número total de variables predictor del modelo.</p>
+<p>ntree Corresponde al número total de árboles que se construyen en el bosque. Un mayor número de árboles mejora la estabilidad de las predicciones y reduce la varianza del modelo, especialmente en la estimación de cuantiles. Sin embargo, aumentar demasiado este número incrementa también el tiempo de cómputo.</p>
+<p>Puede variar entre 100 y 2000 árboles.</p>
+<p>Rangos prácticos más comunes:</p>
+<p>100–500 → más rápido, buen desempeño general.</p>
+<p>500–1000 → mayor estabilidad en cuantiles y menor varianza.</p>
+<p>+1000 → solo cuando se necesita alta estabilidad (por ejemplo, mapas espaciales grandes o cuantiles extremos).</p>
+<p>min.node.size Representa el tamaño mínimo que debe tener un nodo terminal en cada árbol. Este parámetro controla la profundidad y complejidad del árbol. Valores más pequeños permiten árboles más detallados y profundos, mientras que valores más grandes producen árboles más simples y generalistas.</p>
+<p>Afecta la profundidad del árbol y se mueve normalmente entre 1 y 20.</p>
+<p>Rangos más usados:</p>
+<p>1–5 → árboles más detallados (común en regresión).</p>
+<p>5–10 → árboles más simples y generalistas.</p>
+<p>Valores → 10 se usan cuando se quiere evitar sobreajuste en datasets pequeños.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definir parámetros
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Grid manual para Quantile RF ---</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores que se evaluarán para mtry (número de variables por división)</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>mtry_vals   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>)</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores que se evaluarán para ntree (número de árboles del bosque)</span></span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>ntree_vals  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">300</span>, <span class="dv">500</span>)</span>
+<span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor a evaluar para min.node.size (tamaño mínimo de los nodos terminales)</span></span>
+<span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a>min.node.size_vals <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">5</span>)</span>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-12"><a href="#cb78-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Se crea un data frame con todas las combinaciones posibles de parámetros</span></span>
+<span id="cb78-13"><a href="#cb78-13" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">mtry =</span> mtry_vals,</span>
+<span id="cb78-14"><a href="#cb78-14" aria-hidden="true" tabindex="-1"></a>                       <span class="at">num.trees =</span> ntree_vals,</span>
+<span id="cb78-15"><a href="#cb78-15" aria-hidden="true" tabindex="-1"></a>                       <span class="at">min.node.size =</span> min.node.size_vals)</span>
+<span id="cb78-16"><a href="#cb78-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-17"><a href="#cb78-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Columnas vacías para almacenar desempeño del modelo</span></span>
+<span id="cb78-18"><a href="#cb78-18" aria-hidden="true" tabindex="-1"></a>results<span class="sc">$</span>RMSE_oob  <span class="ot">&lt;-</span> <span class="cn">NA</span>   <span class="co"># Error estimado OOB</span></span>
+<span id="cb78-19"><a href="#cb78-19" aria-hidden="true" tabindex="-1"></a>results<span class="sc">$</span>RMSE_test <span class="ot">&lt;-</span> <span class="cn">NA</span>  <span class="co"># Error sobre datos de prueba (más confiable)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>Con los parámetros establecidos podemos entrenar el modelo realizando una búsqueda óptima dentro de lo establecido. Se predice en el conjunto de prueba para obtener las métricas.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Modelo óptimo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Bucle que recorre cada combinación del grid</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(results))){</span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extrae los valores de parámetros para la iteración actual</span></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>  mtry_i <span class="ot">&lt;-</span> results<span class="sc">$</span>mtry[i]</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>  ntree_i <span class="ot">&lt;-</span> results<span class="sc">$</span>num.trees[i]</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>  mn_i <span class="ot">&lt;-</span> results<span class="sc">$</span>min.node.size[i]</span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Para asegurar reproducibilidad</span></span>
+<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Entrena el modelo Quantile Regression Forest</span></span>
+<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a>  rf_q <span class="ot">&lt;-</span> <span class="fu">ranger</span>(</span>
+<span id="cb79-14"><a href="#cb79-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">formula =</span> X0_30_cm <span class="sc">~</span> .,       <span class="co"># Variable respuesta y predictores</span></span>
+<span id="cb79-15"><a href="#cb79-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> train,                 <span class="co"># Datos de entrenamiento</span></span>
+<span id="cb79-16"><a href="#cb79-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">num.trees =</span> ntree_i,          <span class="co"># Número de árboles</span></span>
+<span id="cb79-17"><a href="#cb79-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">mtry =</span> mtry_i,                <span class="co"># Número de variables por división</span></span>
+<span id="cb79-18"><a href="#cb79-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">min.node.size =</span> mn_i,         <span class="co"># Tamaño mínimo del nodo terminal</span></span>
+<span id="cb79-19"><a href="#cb79-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">importance =</span> <span class="st">"permutation"</span>,   <span class="co"># Importancia de variables</span></span>
+<span id="cb79-20"><a href="#cb79-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">quantreg =</span> <span class="cn">TRUE</span>,              <span class="co"># Activa QRF para cuantiles</span></span>
+<span id="cb79-21"><a href="#cb79-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">respect.unordered.factors =</span> <span class="st">"order"</span>, <span class="co"># Manejo de factores</span></span>
+<span id="cb79-22"><a href="#cb79-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">2025</span>)</span>
+<span id="cb79-23"><a href="#cb79-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-24"><a href="#cb79-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción en el conjunto de prueba</span></span>
+<span id="cb79-25"><a href="#cb79-25" aria-hidden="true" tabindex="-1"></a>  pred_test <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_q, <span class="at">data =</span> test, <span class="at">type =</span> <span class="st">"response"</span>)<span class="sc">$</span>predictions</span>
+<span id="cb79-26"><a href="#cb79-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-27"><a href="#cb79-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Cálculo del RMSE en test (métrica principal de evaluación)</span></span>
+<span id="cb79-28"><a href="#cb79-28" aria-hidden="true" tabindex="-1"></a>  results<span class="sc">$</span>RMSE_test[i] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((test<span class="sc">$</span>X0_30_cm <span class="sc">-</span> pred_test)<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb79-29"><a href="#cb79-29" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb79-30"><a href="#cb79-30" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Obtención del error OOB si está disponible (ranger suele devolver MSE)</span></span>
+<span id="cb79-31"><a href="#cb79-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(rf_q<span class="sc">$</span>prediction.error)){</span>
+<span id="cb79-32"><a href="#cb79-32" aria-hidden="true" tabindex="-1"></a>    results<span class="sc">$</span>RMSE_oob[i] <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(rf_q<span class="sc">$</span>prediction.error)</span>
+<span id="cb79-33"><a href="#cb79-33" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb79-34"><a href="#cb79-34" aria-hidden="true" tabindex="-1"></a>    results<span class="sc">$</span>RMSE_oob[i] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb79-35"><a href="#cb79-35" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb79-36"><a href="#cb79-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-37"><a href="#cb79-37" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Imprime el avance del proceso</span></span>
+<span id="cb79-38"><a href="#cb79-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"Iter %d/%d: mtry=%d, ntree=%d -&gt; RMSE_test=%.4f</span><span class="sc">\n</span><span class="st">"</span>,</span>
+<span id="cb79-39"><a href="#cb79-39" aria-hidden="true" tabindex="-1"></a>              i, <span class="fu">nrow</span>(results), mtry_i, ntree_i, results<span class="sc">$</span>RMSE_test[i]))</span>
+<span id="cb79-40"><a href="#cb79-40" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Iter 1/9: mtry=3, ntree=100 -&gt; RMSE_test=29.5932
+Iter 2/9: mtry=4, ntree=100 -&gt; RMSE_test=29.1170
+Iter 3/9: mtry=6, ntree=100 -&gt; RMSE_test=30.1470
+Iter 4/9: mtry=3, ntree=300 -&gt; RMSE_test=29.4141
+Iter 5/9: mtry=4, ntree=300 -&gt; RMSE_test=29.4746
+Iter 6/9: mtry=6, ntree=300 -&gt; RMSE_test=29.6902
+Iter 7/9: mtry=3, ntree=500 -&gt; RMSE_test=29.4103
+Iter 8/9: mtry=4, ntree=500 -&gt; RMSE_test=29.7090
+Iter 9/9: mtry=6, ntree=500 -&gt; RMSE_test=29.7100</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>De las metricas obtenidas en el modelo luego de predecir con el conjunto de prueba, se elige el “MEJOR” modelo.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Selección de modelo
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Elegir el mejor por menor RMSE en test</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>best_row <span class="ot">&lt;-</span> results[<span class="fu">which.min</span>(results<span class="sc">$</span>RMSE_test), ]</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>best_row</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  mtry num.trees min.node.size RMSE_oob RMSE_test
+2    4       100             5 27.47377  29.11703</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Se reentrena el modelo con los parámetros definidos como óptimos.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Entrenar modelo final
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Re-entrenar el mejor modelo con todos los datos de entrenamiento usando los hiperparámetros seleccionados</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2025</span>)</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>best_qrf <span class="ot">&lt;-</span> <span class="fu">ranger</span>(</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula =</span> X0_30_cm <span class="sc">~</span> .,</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train,</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">num.trees =</span> <span class="dv">100</span>,</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="dv">4</span>,</span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">min.node.size =</span> <span class="dv">5</span>,</span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">importance =</span> <span class="st">"permutation"</span>,</span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">quantreg =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">respect.unordered.factors =</span> <span class="st">"order"</span>,</span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">seed =</span> <span class="dv">2025</span></span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Para guardar este modelo:</span></span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(best_qrf, <span class="at">file =</span> <span class="st">"salidas/best_qrf.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>Se predice con los datos sobre ambos datasets</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Predicción de los datos
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Evaluación en train y test usando predicción de la media (type='response') ---</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>pred_train_mean <span class="ot">&lt;-</span> <span class="fu">predict</span>(best_qrf, <span class="at">data =</span> train, <span class="at">type =</span> <span class="st">"response"</span>)<span class="sc">$</span>predictions</span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>pred_test_mean  <span class="ot">&lt;-</span> <span class="fu">predict</span>(best_qrf, <span class="at">data =</span> test, <span class="at">type =</span> <span class="st">"response"</span>)<span class="sc">$</span>predictions</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Si quieres también obtener cuantiles (ej. median 0.5 y 0.025/0.975)</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>pred_test_q50  <span class="ot">&lt;-</span> <span class="fu">predict</span>(best_qrf, <span class="at">data =</span> test, <span class="at">type =</span> <span class="st">"quantiles"</span>, <span class="at">quantiles =</span> <span class="fl">0.5</span>)<span class="sc">$</span>predictions</span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>pred_test_q005 <span class="ot">&lt;-</span> <span class="fu">predict</span>(best_qrf, <span class="at">data =</span> test, <span class="at">type =</span> <span class="st">"quantiles"</span>, <span class="at">quantiles =</span> <span class="fl">0.005</span>)<span class="sc">$</span>predictions</span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>pred_test_q095 <span class="ot">&lt;-</span> <span class="fu">predict</span>(best_qrf, <span class="at">data =</span> test, <span class="at">type =</span> <span class="st">"quantiles"</span>, <span class="at">quantiles =</span> <span class="fl">0.095</span>)<span class="sc">$</span>predictions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>Se calculan las métricas de los datos predichos y la importancia de las variables</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Validación del modelo e importancia de las variables
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Métricas (usando caret::postResample o funciones propias)</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>train.RMSE <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="fu">mean</span>((train<span class="sc">$</span>X0_30_cm <span class="sc">-</span> pred_train_mean)<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="dv">4</span>)</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>test.RMSE  <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="fu">mean</span>((test<span class="sc">$</span>X0_30_cm <span class="sc">-</span> pred_test_mean)<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="dv">4</span>)</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>train.R2 <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">cor</span>(train<span class="sc">$</span>X0_30_cm, pred_train_mean, <span class="at">use=</span><span class="st">"complete.obs"</span>)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>test.R2  <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">cor</span>(test<span class="sc">$</span>X0_30_cm, pred_test_mean, <span class="at">use=</span><span class="st">"complete.obs"</span>)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>Train_metrics <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">R2 =</span> train.R2, <span class="at">RMSE =</span> train.RMSE)</span>
+<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>Test_metrics  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">R2 =</span> test.R2,  <span class="at">RMSE =</span> test.RMSE)</span>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a>Train_metrics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     R2    RMSE 
+ 0.9230 12.2383 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>Test_metrics</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    R2   RMSE 
+ 0.420 29.117 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Importancia de variables (permutation importance)</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a>var_imp <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(best_qrf<span class="sc">$</span>variable.importance)</span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(var_imp) <span class="ot">&lt;-</span> <span class="st">"importance"</span></span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a>var_imp<span class="sc">$</span>variable <span class="ot">&lt;-</span> <span class="fu">rownames</span>(var_imp)</span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a>var_imp <span class="ot">&lt;-</span> var_imp <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(importance))</span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(var_imp, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(variable, importance), <span class="at">y =</span> importance)) <span class="sc">+</span></span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb89-8"><a href="#cb89-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Variable importance (ranger - permutation)"</span>, <span class="at">x =</span> <span class="st">"Variable"</span>, <span class="at">y =</span> <span class="st">"Importance"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap15_modelo_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Ahora se hace la predicción pero sobre el stack de las covariables, es importante omitir los valores NA y asegurarse que no entren a la predicción</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Predicción del ráster
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------------------------</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Predicción sobre el stack de covariables (raster)</span></span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------------------------------</span></span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargar stack de covariables</span></span>
+<span id="cb90-5"><a href="#cb90-5" aria-hidden="true" tabindex="-1"></a>lista_raster <span class="ot">=</span> <span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"datos/covariables"</span>, <span class="at">pattern =</span> <span class="st">".tif$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb90-6"><a href="#cb90-6" aria-hidden="true" tabindex="-1"></a>raster_stack <span class="ot">=</span> <span class="fu">stack</span>(lista_raster)</span>
+<span id="cb90-7"><a href="#cb90-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-8"><a href="#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Asegúrar que las capas necesarias estén presentes y en el mismo orden que las columnas predictoras del modelo</span></span>
+<span id="cb90-9"><a href="#cb90-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Se seleccionan solo las capas que coinciden con los nombres de covariables</span></span>
+<span id="cb90-10"><a href="#cb90-10" aria-hidden="true" tabindex="-1"></a>covariate_names <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(data_VIF, <span class="st">"X0_30_cm"</span>)</span>
+<span id="cb90-11"><a href="#cb90-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Se reordenan y seleccionan</span></span>
+<span id="cb90-12"><a href="#cb90-12" aria-hidden="true" tabindex="-1"></a>available_names <span class="ot">&lt;-</span> <span class="fu">names</span>(raster_stack)</span>
+<span id="cb90-13"><a href="#cb90-13" aria-hidden="true" tabindex="-1"></a>missings <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(covariate_names, available_names)</span>
+<span id="cb90-14"><a href="#cb90-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(missings) <span class="sc">&gt;</span> <span class="dv">0</span>){</span>
+<span id="cb90-15"><a href="#cb90-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stop</span>(<span class="st">"Faltan capas en el raster_stack para: "</span>, <span class="fu">paste</span>(missings, <span class="at">collapse =</span> <span class="st">", "</span>))</span>
+<span id="cb90-16"><a href="#cb90-16" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb90-17"><a href="#cb90-17" aria-hidden="true" tabindex="-1"></a>raster_stack_sel <span class="ot">&lt;-</span> raster_stack[[covariate_names]]</span>
+<span id="cb90-18"><a href="#cb90-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-19"><a href="#cb90-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraer valores (por bloques para memoria si dataset grande</span></span>
+<span id="cb90-20"><a href="#cb90-20" aria-hidden="true" tabindex="-1"></a>vals <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">values</span>(raster_stack_sel))</span>
+<span id="cb90-21"><a href="#cb90-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Mantener NA rows para reconstruir raster</span></span>
+<span id="cb90-22"><a href="#cb90-22" aria-hidden="true" tabindex="-1"></a>idx_na <span class="ot">&lt;-</span> <span class="fu">apply</span>(vals, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="fu">any</span>(<span class="fu">is.na</span>(x)))</span>
+<span id="cb90-23"><a href="#cb90-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Predecir por bloques: predict.ranger espera data frame con columnas iguales a las usadas en entrenamiento</span></span>
+<span id="cb90-24"><a href="#cb90-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Ojo: si hay factores, hay que convertir niveles coherentes</span></span>
+<span id="cb90-25"><a href="#cb90-25" aria-hidden="true" tabindex="-1"></a>preds_mean <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA_real_</span>, <span class="fu">nrow</span>(vals))</span>
+<span id="cb90-26"><a href="#cb90-26" aria-hidden="true" tabindex="-1"></a>non_na_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span>idx_na)</span>
+<span id="cb90-27"><a href="#cb90-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">length</span>(non_na_idx)<span class="sc">&gt;</span><span class="dv">0</span>){</span>
+<span id="cb90-28"><a href="#cb90-28" aria-hidden="true" tabindex="-1"></a>  pred_batch <span class="ot">&lt;-</span> <span class="fu">predict</span>(best_qrf, <span class="at">data =</span> vals[non_na_idx, ], <span class="at">type =</span> <span class="st">"response"</span>)<span class="sc">$</span>predictions</span>
+<span id="cb90-29"><a href="#cb90-29" aria-hidden="true" tabindex="-1"></a>  preds_mean[non_na_idx] <span class="ot">&lt;-</span> pred_batch</span>
+<span id="cb90-30"><a href="#cb90-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb90-31"><a href="#cb90-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-32"><a href="#cb90-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Crear raster de salida (se utiliza la primera capa como template)</span></span>
+<span id="cb90-33"><a href="#cb90-33" aria-hidden="true" tabindex="-1"></a>pred_raster <span class="ot">&lt;-</span> raster_stack_sel[[<span class="dv">1</span>]]</span>
+<span id="cb90-34"><a href="#cb90-34" aria-hidden="true" tabindex="-1"></a><span class="fu">values</span>(pred_raster) <span class="ot">&lt;-</span> preds_mean</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p>Se guarda el ráster obtenido y también se pueden calcular las métricas del mismo.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Metricas de ráster
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Guardar o plotear</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pred_raster, <span class="at">main =</span> <span class="st">"Predicción QRF - media (X0_30_cm)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="cap15_modelo_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extraer predicciones en puntos entrenamiento/test </span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>train_extract <span class="ot">&lt;-</span> raster<span class="sc">::</span><span class="fu">extract</span>(pred_raster, data_sf[train_index, ])</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>test_extract  <span class="ot">&lt;-</span> raster<span class="sc">::</span><span class="fu">extract</span>(pred_raster, data_sf[<span class="sc">-</span>train_index, ])</span>
+<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-5"><a href="#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Recalcula métricas con la predicción raster</span></span>
+<span id="cb92-6"><a href="#cb92-6" aria-hidden="true" tabindex="-1"></a>train.R2_raster <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">cor</span>(train<span class="sc">$</span>X0_30_cm, train_extract, <span class="at">use=</span><span class="st">"complete.obs"</span>)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb92-7"><a href="#cb92-7" aria-hidden="true" tabindex="-1"></a>train.RMSE_raster <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="fu">mean</span>((train<span class="sc">$</span>X0_30_cm <span class="sc">-</span> train_extract)<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="dv">3</span>)</span>
+<span id="cb92-8"><a href="#cb92-8" aria-hidden="true" tabindex="-1"></a>test.R2_raster <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">cor</span>(test<span class="sc">$</span>X0_30_cm, test_extract, <span class="at">use=</span><span class="st">"complete.obs"</span>)<span class="sc">^</span><span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb92-9"><a href="#cb92-9" aria-hidden="true" tabindex="-1"></a>test.RMSE_raster <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sqrt</span>(<span class="fu">mean</span>((test<span class="sc">$</span>X0_30_cm <span class="sc">-</span> test_extract)<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), <span class="dv">3</span>)</span>
+<span id="cb92-10"><a href="#cb92-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-11"><a href="#cb92-11" aria-hidden="true" tabindex="-1"></a>Train_metrics_raster <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">R2 =</span> train.R2_raster, <span class="at">RMSE =</span> train.RMSE_raster)</span>
+<span id="cb92-12"><a href="#cb92-12" aria-hidden="true" tabindex="-1"></a>Test_metrics_raster  <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">R2 =</span> test.R2_raster,  <span class="at">RMSE =</span> test.RMSE_raster)</span>
+<span id="cb92-13"><a href="#cb92-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb92-14"><a href="#cb92-14" aria-hidden="true" tabindex="-1"></a>Train_metrics_raster</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    R2   RMSE 
+ 0.923 12.238 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>Test_metrics_raster</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    R2   RMSE 
+ 0.420 29.117 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Para guardar el raster:</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(pred_raster, <span class="at">filename =</span> <span class="st">"salidas/MO_30cm.tif"</span>, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="ejercicio-final" class="level2" style="color: darkblue" data-number="15.7">
+<h2 style="color: darkblue" data-number="15.7" class="anchored" data-anchor-id="ejercicio-final"><span class="header-section-number">15.7</span> Ejercicio final</h2>
+<p>Ahora es momento de poner en práctica lo que se pudo aprender en este taller.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./cap14_herramientas_geo.html" class="pagination-link" aria-label="Herramientas y métodos para la predicción espacial">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Herramientas y métodos para la predicción espacial</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./cap16_incertidumbre.html" class="pagination-link" aria-label="Incretidumbre y evaluación de los mapas">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Incretidumbre y evaluación de los mapas</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

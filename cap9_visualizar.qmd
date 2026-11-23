@@ -1,5 +1,14 @@
 # Visualización de datos espaciales {style="color: #122562"}
 
+::: {.callout-tip}
+## Datos de este capítulo
+
+Los archivos que usa este capítulo están en [datos/cap09](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/cap09).
+
+Para ejecutar el código, descarga el proyecto completo ([Libro_MDS.zip](https://github.com/ctirado-cgiar/Libro_MDS/archive/refs/heads/main.zip)), descomprímelo y ábrelo en RStudio con `DSM.Rproj`. Las rutas del código funcionan tal cual.
+:::
+
+
 Las diferentes estructuras de datos son formatos que organizan y almacenan información. Para visualizarlos, existe un gran conjunto de paquetes en R disponibles que permiten trabajar con datos espaciales y espacio-temporales.
 
 Estos paquetes se describen en la [Vista de tareas de Cran: Análisis de datos espaciales](https://cran.r-project.org/view=Spatial) . La vista de tareas de CRAN organiza los distintos paquetes en categorías, donde se pueden identificar las opciones de paquetes según las necesidades del proyecto.

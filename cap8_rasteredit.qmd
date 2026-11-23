@@ -1,5 +1,14 @@
 # Procesamiento de datos espaciales- Ráster
 
+::: {.callout-tip}
+## Datos de este capítulo
+
+Los archivos que usa este capítulo están en [datos/cap08](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/cap08).
+
+Para ejecutar el código, descarga el proyecto completo ([Libro_MDS.zip](https://github.com/ctirado-cgiar/Libro_MDS/archive/refs/heads/main.zip)), descomprímelo y ábrelo en RStudio con `DSM.Rproj`. Las rutas del código funcionan tal cual.
+:::
+
+
 ## Ráster {style="color: #122562"}
 
 Un archivo ráster es un tipo de archivo que almacena datos de imagen en forma de una cuadrícula de píxeles o puntos de datos, en contraposición a los archivos vectoriales que almacenan datos de imagen en forma de líneas, formas y curvas.

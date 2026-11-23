@@ -1,5 +1,14 @@
 # Selección de covariables {style="color: #122562"}
 
+::: {.callout-tip}
+## Datos de este capítulo
+
+Los archivos que usa este capítulo están en [datos/cap13](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/cap13) · [datos/covariables](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/covariables).
+
+Para ejecutar el código, descarga el proyecto completo ([Libro_MDS.zip](https://github.com/ctirado-cgiar/Libro_MDS/archive/refs/heads/main.zip)), descomprímelo y ábrelo en RStudio con `DSM.Rproj`. Las rutas del código funcionan tal cual.
+:::
+
+
 Seleccionar las covariables adecuadas es fundamental dentro de la preparación de los datos. En este paso se busca explicar la relación que tienen las variables. Una covariable es influyente en la variable dependiente (la que se quiere estudiar) pero no es parte de la variable independiente (la que se manipula).
 
 ## Importancia de la selección de covariables {style="color: #122562"}

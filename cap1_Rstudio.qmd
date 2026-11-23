@@ -40,7 +40,7 @@ La interfaz de usuario de R no es muy amigable por lo que lo más común es usar
 
 Esta interfaz proporciona una serie de herramientas que hacen que el trabajo con R sea más eficiente y productivo. Algunos de los elementos claves se pueden ver en la siguiente imagen:
 
-[![Interfaz de R, fuente bookdown R for begginers](capitulos/Cap1/images/interfaz.png){fig-align="center" width="684"}](https://bookdown.org/paradinas_iosu/Prueba/rstudio.html)
+[![Interfaz de R, fuente bookdown R for begginers](capitulos/Cap1/Images/interfaz.png){fig-align="center" width="684"}](https://bookdown.org/paradinas_iosu/Prueba/rstudio.html)
 
 **Editor de Script**: Es el área principal donde se puede escribir y editar el código. Ofrece características como resaltado de sintaxis, autocompletado y ayuda contextual.
 
@@ -68,13 +68,13 @@ R se distingue de otros lenguajes de programación por varias características �
 
 En R, las librerías (también conocidas como paquetes o bibliotecas) son conjuntos de funciones y datos que amplían las capacidades del lenguaje base. Estas bibliotecas se pueden instalar y cargar en una sesión de R para utilizar sus funciones y conjuntos de datos específicos. Para realizar la instalación de las diferentes librerías, se debe acceder a la casilla de "Install" que se ubica dentro del cuadrante de visualización como "Packages", allí se busca la librería y se procede a instalar.
 
-![](capitulos/Cap1/images/pacas.jpg){fig-align="center"}
+![](capitulos/Cap1/Images/pacas.jpg){fig-align="center"}
 
-![Descarga de paquetes, fuente propia](capitulos/Cap1/images/instal.png){fig-align="center"}
+![Descarga de paquetes, fuente propia](capitulos/Cap1/Images/instal.png){fig-align="center"}
 
 Algunas de las librerías más usadas dentro de las diversas disciplinas que utilizan datos, se pueden ver en el siguiente gráfico:
 
-![Librerías agrupadas por ciencias, fuente propia](capitulos/Cap1/images/librerias.png){fig-align="center"}
+![Librerías agrupadas por ciencias, fuente propia](capitulos/Cap1/Images/librerias.png){fig-align="center"}
 
 **Análisis estadístico y gráfico:**
 
@@ -127,18 +127,18 @@ Algunas de las librerías más usadas dentro de las diversas disciplinas que uti
 
 Desde RStudio se puede crear un script, desde el ícono de **nuevo archivo** o con la combinación de teclas CTRL+Shift+N. Allí se abre una nueva pestaña donde se puede introducir la secuencia de código que luego se podrá ejecutar.
 
-![Creación de script en R, fuente propia](capitulos/Cap1/images/clipboard-673609687.png){fig-align="center"}
+![Creación de script en R, fuente propia](capitulos/Cap1/Images/clipboard-673609687.png){fig-align="center"}
 
 **R Markdown**
 
 Otro tipo de archivo que se puede crear es un [R Markdown](https://rmarkdown.rstudio.com/), donde se puede procesar texto e incluir líneas de código.
 
-![Creación de R Markdown, fuente propia](capitulos/Cap1/images/clipboard-3725501041.png){fig-align="center"}
+![Creación de R Markdown, fuente propia](capitulos/Cap1/Images/clipboard-3725501041.png){fig-align="center"}
 
 **Quarto document**
 
 [Quarto](https://quarto.org/) es un sistema moderno de creación de documentos dinámicos, informes, presentaciones, libros, sitios web y más. Dentro de este documento se pueden crear R Markdown, R Notebook, R script y archivos de Word, PDF, HTML y otros. Brindando un entorno más visual y un manejo más intuitivo, facilitando la preparación de los documentos.
 
-![](capitulos/Cap1/images/clipboard-1879562134.png){fig-align="center"}
+![](capitulos/Cap1/Images/clipboard-1879562134.png){fig-align="center"}
 
-![Creación de documente quarto, fuente propia](capitulos/Cap1/images/clipboard-695132301.png){fig-align="center"}
+![Creación de documente quarto, fuente propia](capitulos/Cap1/Images/clipboard-695132301.png){fig-align="center"}

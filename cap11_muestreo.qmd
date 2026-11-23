@@ -1,5 +1,14 @@
 # Estrategia de muestreo {style="color: #122562"}
 
+::: {.callout-tip}
+## Datos de este capítulo
+
+Los archivos que usa este capítulo están en [datos/covariables](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/covariables).
+
+Para ejecutar el código, descarga el proyecto completo ([Libro_MDS.zip](https://github.com/ctirado-cgiar/Libro_MDS/archive/refs/heads/main.zip)), descomprímelo y ábrelo en RStudio con `DSM.Rproj`. Las rutas del código funcionan tal cual.
+:::
+
+
 Cuando se realiza muestreo se busca obtener datos que permitan estimar algún parámetro estadístico, o predicciones espaciales de algunas propiedades sobre un área. El muestreo está limitado por los objetivos que tiene el proyecto y los recursos financieros y disponibles, por lo que se busca una estrategia de muestreo eficiente. Por lo que en el estudio de suelos para mapeo se busca establecer sitios que optimicen la recolección de los datos.
 
 ## Muestreo en Mapeo Digital de Suelos {style="color: #122562"}

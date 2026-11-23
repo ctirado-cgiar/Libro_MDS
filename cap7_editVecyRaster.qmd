@@ -1,5 +1,14 @@
 # Procesamiento de datos espaciales- Vectoriales {style="color: #122562"}
 
+::: {.callout-tip}
+## Datos de este capítulo
+
+Los archivos que usa este capítulo están en [datos/cap07](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/cap07).
+
+Para ejecutar el código, descarga el proyecto completo ([Libro_MDS.zip](https://github.com/ctirado-cgiar/Libro_MDS/archive/refs/heads/main.zip)), descomprímelo y ábrelo en RStudio con `DSM.Rproj`. Las rutas del código funcionan tal cual.
+:::
+
+
 ## Datos geoespaciales {style="color: #122562"}
 
 Los datos geoespaciales son información que está asociada a ubicaciones geográficas específicas en la superficie de la Tierra. Estos datos se caracterizan por tener coordenadas geográficas que permiten su localización precisa en un sistema de referencia espacial. Estos datos pueden describir una amplia gama de fenómenos físicos, químicos, ambientales, sociales o económicos.

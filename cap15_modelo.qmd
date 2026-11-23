@@ -1,5 +1,14 @@
 # Predicción espacial: Modelamiento y validación {style="color: #122562"}
 
+::: {.callout-tip}
+## Datos de este capítulo
+
+Los archivos que usa este capítulo están en [datos/cap15](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/cap15) · [datos/covariables](https://github.com/ctirado-cgiar/Libro_MDS/tree/main/datos/covariables).
+
+Para ejecutar el código, descarga el proyecto completo ([Libro_MDS.zip](https://github.com/ctirado-cgiar/Libro_MDS/archive/refs/heads/main.zip)), descomprímelo y ábrelo en RStudio con `DSM.Rproj`. Las rutas del código funcionan tal cual.
+:::
+
+
 El modelo seleccionado para este ejercicio es el Random Forest o bosques aleatorios, al principal ventaja de este método es su precisión de predicción. En muchos conjuntos de datos funcionan mejor, que otros algoritmos de clasificación y regresión.
 
 ## Entrenamiento y validación de los modelos {style="color: #122562"}
